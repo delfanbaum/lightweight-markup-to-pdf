@@ -127,3 +127,12 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+# Sass stuff
+*/**/.sass-cache
+.sass-cache
+resources.txt
+*/**/*.css.map
+*/**/fonts/
+output/
+styles/templates
