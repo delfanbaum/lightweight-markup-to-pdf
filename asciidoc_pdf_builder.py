@@ -4,7 +4,6 @@ import os
 import shutil
 import subprocess
 from weasyprint import HTML, CSS
-from PyPDF2 import PdfFileReader
 
 print("\n=======================================================")
 print("Starting the PDF builder script for asciidoc files...")
