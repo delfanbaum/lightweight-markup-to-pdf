@@ -22,6 +22,11 @@ def clean_html(html: str, section_break_marker: str = '#') -> str:
     footnote_r = re.compile(r'<sup class="footnote">\[(.*?)\]</sup>')
     html = re.sub(footnote_r, fix_footnotes, html)
 
+    # make smart quotes for double quotes
+    print("Adding smart quotes...")
+    quotes_r = re.compile(r'<(p|li)(.*?)>(.*?)</(p|li)>')
+    html = re.sub(quotes_r, check_for_quotes, html)
+
     # just swap hrs for breaks (will help with copy-paste to word)
     html = html.replace("<hr>",
             f"<div class='section-break'><p>{section_break_marker}</p></div>")
@@ -63,3 +68,21 @@ def expand_links(match):
 def fix_footnotes(match):
     # <sup class="footnote">[<a id="_footnoteref_1" class="footnote" href="#_footnotedef_1" title="View footnote.">1</a>]</sup>
     return f'<sup class="footnote">{match.group(1)}</sup>'
+
+def check_for_quotes(match):
+    # match group 1 s/b open tag
+    # match group 2 s/b anything inside the open tag
+    # match group 3 s/b text
+    # match gropu 4 s/b close tag
+    inner_html = match.group(3)
+    quote_strings = re.compile(r'(?<!=)"(.*?)"')
+    inner_html = re.sub(quote_strings, smart_quote_pairs, inner_html)
+    return f'<{match.group(1)}{match.group(2)}>{inner_html}</{match.group(4)}>'
+
+
+def smart_quote_pairs(match):
+    # handle case of href="some[" attr="]some otheer"
+    if match.group(1).find('=') == -1:
+        return f'&ldquo;{match.group(1)}&rdquo;'
+    else: 
+        return match.group(0)

@@ -9,13 +9,3 @@ a[data-type="xref"]{
         content: '" on page ' target-counter(attr(href), page);
     } 
 }
-
-// until I can find a better way to do this
-sup.footnote {
-    a[data-type="xref"]{
-        font-style: normal;
-        &:before, &:after {
-            content:'';
-        }
-    }
-}
