@@ -7,5 +7,7 @@ This is a work in progress!
 For Python requirements, see requirements.txt. Asciidoctor is also required, as is sass.
 
 Note(s) to self:
-* Project structure is a problem but lets try https://docs.python-guide.org/writing/structure/
-* See cleanhtml.py for an idea about type hints
+- Project structure is a problem but lets try https://docs.python-guide.org/writing/structure/
+
+Wishlist: 
+- user stylesheet as argument
