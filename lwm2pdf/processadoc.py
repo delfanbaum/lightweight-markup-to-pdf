@@ -7,7 +7,7 @@ import os
 
 # beautify function
 print("Beautifying asciidoc markup...")
-def beautifyText(text):
+def beautify_text(text):
     # don't beautify verse
     if text.find("[verse]\n____") == -1:
         # make sure we can still have literals/code blocks
@@ -28,7 +28,8 @@ def beautifyText(text):
     return text
 
 # check for includes and if so, manage them
-def checkIncludes(fn, parentPath=''):
+# Note to self: wouldn't it be easier just to... include the inclues in the file, and then only run the beautify script once?
+def check_includes(fn, target_dir, parentPath=''):
     # get file
     dirs = fn.split("/")
     fnpath = "/".join(dirs[:-1]) + "/"
@@ -45,32 +46,30 @@ def checkIncludes(fn, parentPath=''):
             childPath = ''
             if len(childFn.split('/')) > 1:
                 childPath = "/".join(childFn.split('/')[:-1])
-                if os.path.isdir(targetdir + childPath) == False:
-                    os.mkdir(targetdir + childPath)
+                if os.path.isdir(target_dir + childPath) == False:
+                    os.mkdir(target_dir + childPath)
             childFnPath = fnpath + childFn
             childText = open(childFnPath, 'r').read()
             # build the output file to the buildsrc directory
-            open(targetdir + parentPath + childFn, 'w').write(beautifyText(childText))
+            open(target_dir + parentPath + childFn, 'w').write(beautify_text(childText))
             # check for includes inside in the child include
-            checkIncludes(childFnPath, childPath + '/')
+            check_includes(childFnPath, childPath + '/')
     # return corrected text
-    return beautifyText(parentText)
+    return beautify_text(parentText)
 
-# check includes
-text = checkIncludes(fn)
-# make our buildfile
-buildfile = targetdir + 'buildfile.adoc'
-open(buildfile, 'w').write(text)
 
 # ---------------------------------------------------------------------
 # Asciidoctor step
 # ---------------------------------------------------------------------
 
-# run it through asciidoc
-print("Running our input through asciidoctor....")
-try:
-  run_adoctor = f"asciidoctor -a stylesheet! {buildfile} -D {targetdir} -o buildfile.html"
-  if os.system(run_adoctor) != 0:
-      raise Exception('Error: there was a problem running asciidoctor. Please ensure you have asciidoctor installed on your path.')
-except:
-  print("Error: something went wrong while running asciidoctor; please check your configuration.")
+def asciidoc_to_html(fn, target_dir, output_fn):
+    print("Running our input through asciidoctor....")
+    try:
+        run_adoctor = f"asciidoctor -a stylesheet! {fn} -D {target_dir} -o {output_fn}"
+        if os.system(run_adoctor) != 0:
+            raise Exception('Error: there was a problem running asciidoctor. Please ensure you have asciidoctor installed on your path.')
+    # TO DO:
+    # * Better exception handling
+    # * Python asciidoc fallback?
+    except:
+        print("Error: something went wrong while running asciidoctor; please check your configuration.")

@@ -4,6 +4,8 @@ import os
 import shutil
 import subprocess
 from weasyprint import HTML, CSS
+from cleanhtml import clean_html
+from processadoc import check_includes
 
 print("\n==============================================================")
 print("Starting the PDF builder script for lighweight markup files...")
@@ -44,62 +46,6 @@ if os.path.isdir(parentdir):
 os.mkdir(parentdir)
 # there is a better way to do this I'm sure, but...
 os.mkdir(targetdir)
-
-
-# ---------------------------------------------------------------------
-# cleanup the asciidoc
-# ---------------------------------------------------------------------
-
-# beautify function
-print("Beautifying asciidoc markup...")
-def beautifyText(text):
-    # don't beautify verse
-    if text.find("[verse]\n____") == -1:
-        # make sure we can still have literals/code blocks
-        #r = re.compile(r'----')
-        #text = re.sub(r, r'@@@@', text)
-        # em dashese
-        #r = re.compile(r'--')
-        #text = re.sub(r, r'&#8212;', text)
-        # quotes
-        r = re.compile(r'"(.*?)"')
-        text = re.sub(r, r'"`\1`"', text)
-        # return our literals and code blocks
-        #r = re.compile(r'@@@@')
-        #text = #re.sub(r, r'----', text)
-        # return any role markers
-        r = re.compile(r'\[role\=\"\`(.*?)\`\"\]')
-        text = re.sub(r, r'[role="\1"]', text)
-    return text
-
-# check for includes and if so, manage them
-def checkIncludes(fn, parentPath=''):
-    # get file
-    dirs = fn.split("/")
-    fnpath = "/".join(dirs[:-1]) + "/"
-    parentText = open(fn, 'r').read()
-
-    # check for includes
-    p = re.compile(r'include\:\:(.*?).adoc')
-    result = p.findall(parentText)
-    if len(result) > 0:
-        for x in range(len(result)):
-            # get relevant information
-            childFn = result[x] + ".adoc"
-            # check if the child is inside a directory
-            childPath = ''
-            if len(childFn.split('/')) > 1:
-                childPath = "/".join(childFn.split('/')[:-1])
-                if os.path.isdir(targetdir + childPath) == False:
-                    os.mkdir(targetdir + childPath)
-            childFnPath = fnpath + childFn
-            childText = open(childFnPath, 'r').read()
-            # build the output file to the buildsrc directory
-            open(targetdir + parentPath + childFn, 'w').write(beautifyText(childText))
-            # check for includes inside in the child include
-            checkIncludes(childFnPath, childPath + '/')
-    # return corrected text
-    return beautifyText(parentText)
 
 # check includes
 text = checkIncludes(fn)
@@ -145,62 +91,7 @@ except subprocess.CalledProcessError:
 print("Cleaning up html asciidoctor output...")
 html = open(output_html, 'r').read()
 
-# split the author info
-print("Splitting author name for page numbering...")
-def split_author_names(match):
-    name = match.group(1).split(' ')
-    # edge case
-    if len(name) > 2:
-        first = name[0]
-        middle = name[1] # tbh this won't handle things well
-        last = name[-1]
-    else:
-        first = name[0]
-        last = name[-1]
-    return f"<span id='authorFirstName'>{first}</span>&nbsp<span id='authorLastName'>{last}</span>"
-
-au_r = re.compile(r'<span id="author" class="author">(.*?)</span><br>')
-html = re.sub(au_r, split_author_names, html)
-
-# if quotes, fix citation style
-print("Cleaning up blockquotes...")
-def swap_br_for_comma(match):
-    str = match.group(1)
-    newstr = f'''
-        <div class="attribution">
-        &#8212; {str},
-    '''
-    return newstr
-
-quote_r = re.compile(r'<div class="attribution">\n&#8212; (.*?)<br>')
-html = re.sub(quote_r, swap_br_for_comma, html)
-
-# expand links (but not cross references)
-print("Expanding links and fixing xrefs for print...")
-def expand_links(match):
-    if not match.group(1).find("#") > -1:
-        expanded_link = f'{match.group(2)} (<a href="{match.group(1)}">{match.group(1)}</a>)'
-        return expanded_link
-    elif not match.group(0).find("class=\"footnote") > -1:
-        xref = f'<a href="{match.group(1)}" data-type="xref">{match.group(2)}</a>'
-        return xref
-    else:
-        return match.group(0)
-
-link_r = re.compile(r'<a href="(.*?)">(.*?)</a>')
-html = re.sub(link_r, expand_links, html)
-
-# fix footnotes
-print("Fixing footnotes for print...")
-def fix_footnotes(match):
-    # <sup class="footnote">[<a id="_footnoteref_1" class="footnote" href="#_footnotedef_1" title="View footnote.">1</a>]</sup>
-    return f'<sup class="footnote">{match.group(1)}</sup>'
-
-footnote_r = re.compile(r'<sup class="footnote">\[(.*?)\]</sup>')
-html = re.sub(footnote_r, fix_footnotes, html)
-
-# just swap hrs for breaks (will help with copy-paste to word)
-html = html.replace("<hr>","<div class='section-break'><p>~</p></div>")
+html = clean_html(html)
     
 # ---------------------------------------------------------------------
 # Create html output for building and also for troubleshooting

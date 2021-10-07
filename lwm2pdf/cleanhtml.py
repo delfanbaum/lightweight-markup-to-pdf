@@ -1,8 +1,6 @@
 import re
 
-# Clean function
-
-# takes a string
+# Clean function to make html nicer for weasyprinting
 def clean_html(html: str, section_break_marker: str = '#') -> str:
     # split the author info
     print("Splitting author name for page numbering...")
@@ -14,7 +12,7 @@ def clean_html(html: str, section_break_marker: str = '#') -> str:
     quote_r = re.compile(r'<div class="attribution">\n&#8212; (.*?)<br>')
     html = re.sub(quote_r, swap_br_for_comma, html)
 
-    # expand links (but not cross references)
+    # expand links (and handle cross references)
     print("Expanding links and fixing xrefs for print...")
     link_r = re.compile(r'<a href="(.*?)">(.*?)</a>')
     html = re.sub(link_r, expand_links, html)
