@@ -10,4 +10,6 @@ Note(s) to self:
 - Project structure is a problem but lets try https://docs.python-guide.org/writing/structure/
 
 Wishlist: 
-- user stylesheet as argument
+- user stylesheet as argument 
+-- rip out sass step; can just go with css and keep the sass for repo builds
+- argument to include build output or not

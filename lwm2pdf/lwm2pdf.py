@@ -1,25 +1,61 @@
-import re
+#!/usr/bin/python3
 import sys
 import os
 import shutil
 import subprocess
+import argparse
 from weasyprint import HTML, CSS
 from cleanhtml import clean_html
 from processdocs import asciidoc_to_html, md_to_html
 
+# for help and also bookkeepting
+supperted_file_types = '*.adoc, *.asciidoc, or *.md'
+
+
+
+# options parsing
+
+cli_options_parser = argparse.ArgumentParser(prog='lwm2pdf',
+                     usage='%(prog)s [options]',
+                     description=f'Converts {supperted_file_types} into PDFs based on default or user stylesheet (css).')
+
+cli_options_parser.add_argument('-i', '--input', 
+                                dest='input',
+                                action='store',
+                                nargs=1, 
+                                type=str, 
+                                required=True,
+                                help=f'the file to convert ({supperted_file_types})')
+
+cli_options_parser.add_argument('-o', '--output',
+                                dest='output',
+                                nargs=1,
+                                type=str,
+                                required=False,
+                                help='output filename and destination (optional)')
+
+cli_options_parser.add_argument('-s', '--stylesheet',
+                                dest='stylesheet',
+                                nargs=1,
+                                type=str,
+                                required=False,
+                                help='select user stylesheet (css) (optional)')
+cli_options_parser.add_argument('-p', '--preserve-buildfiles',
+                                dest='save_buildfile',
+                                required=False,
+                                help='preserve buildfiles in output/src in current working directory')
+
+
+options = cli_options_parser.parse_args()
+
 # configuration
-
-
 print("\n==============================================================")
 print("Starting the PDF builder script for lighweight markup files...")
 print("================================================================\n")
 
 # get file
-print("Checking for input file...")
-if len(sys.argv) > 1:
-    fn = sys.argv[1]
-else:
-    fn = input('\nPlease enter the relative path of the \ndocument you\'d like to build: ')
+# TO DO: parse based on current dir, add checking, etc.
+fn = options.input
 
 # get just the filename sans ".asciidoc/adoc"
 split_fn = fn.split("/")[-1].split('.')[0]
