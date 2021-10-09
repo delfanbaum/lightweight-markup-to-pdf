@@ -20,6 +20,13 @@ def get_lwm2pdf_options(supperted_file_types: str):
                                     required=False,
                                     help='output filename and destination (optional)')
 
+    cli_options_parser.add_argument('-od', '--output-dir',
+                                    dest='output_dir',
+                                    action='store',
+                                    type=str,
+                                    required=False,
+                                    help='output filename and destination (optional)')
+
     cli_options_parser.add_argument('-s', '--stylesheet',
                                     dest='stylesheet',
                                     action='store',
@@ -27,6 +34,7 @@ def get_lwm2pdf_options(supperted_file_types: str):
                                     required=False,
                                     help='select user stylesheet (css) (optional)')
     cli_options_parser.add_argument('-p', '--preserve-buildfiles',
+                                    dest="save_buildfile",
                                     action="store_true",
                                     required=False,
                                     help='preserve buildfiles in output/src in current working directory')

@@ -34,6 +34,8 @@ if options.output:
     else:
         output_fn = abspath(options.output)
         print(output_fn)
+elif options.output_dir:
+    output_fn = os.getcwd() + f'/{options.output_dir}/{fn_name_only}.pdf'
 else:
     print("Using default output destination...")
     output_fn = os.getcwd()+ f'/{fn_name_only}.pdf' 
@@ -150,6 +152,12 @@ except Exception as unk_e:
 # Cleanup build files if they're not wanted
 if not options.save_buildfile and os.path.isdir(buildfiles_dir):
     shutil.rmtree(buildfiles_dir)
+# elif options.output_dir:
+#     subprocess to move the directory
+#     mv -r buildfiles_dir
+# else: # move them to wherever the output file is
+
+
 
 if success == True:
     open_pdf()
