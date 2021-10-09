@@ -41,15 +41,12 @@ else:
 # get stylesheet information
 if options.stylesheet:
     css = abspath(options.stylesheet)
-else: 
+else:  # defaults
     script_dir = os.path.dirname(__file__)
     script_home = str(os.path.abspath(script_dir))
     styles_home = ('/').join(script_home.split('/')[0:-1])
     css = styles_home + '/styles/manuscript.css'
 
-# do we save our work?
-if options.save_buildfile:
-    save_buildfiles = True
 
 
 print("\n==============================================================")
@@ -59,7 +56,7 @@ print("================================================================\n")
 # get file
 # TO DO: parse based on current dir, add checking, etc.
 
-buildfiles_dir = os.getcwd() + f'{fn_name_only}-src'
+buildfiles_dir = os.getcwd() + f'/{fn_name_only}-src'
 output_html = f'{buildfiles_dir}/buildfile.html'
 
 
@@ -111,12 +108,13 @@ open(output_html.replace('.html', "_styled.html"), 'w').write(html_with_styles)
 
 # helper 
 def open_pdf():
+    # need to rewrite this with subproces?
     ask_to_open = input('Do you want to open the PDF? [y/n] ')
     if ask_to_open == 'y':
         try: # assume first that we're on a mac, as we usually are
             os.system(f"open {output_fn}")
-        except OSError as error_not_mac:
-            print("")
+        except:
+            
             try: # well maybe we're working on a linux machine
                 os.system(f'xdg-open {output_fn}')
             except OSError as error_not_linux:
@@ -127,7 +125,7 @@ def open_pdf():
                     # happened.
                     print("Sorry, I can't seem to open the file. Try opening with your file browser.")
                     print("Error log:")
-                    print(error_not_mac)
+                    # print(error_not_mac)
                     print(error_not_linux)
                     print(error_not_win)
 
@@ -135,16 +133,23 @@ def open_pdf():
 print("Building PDF...")
 
 # Build final PDF
+success = False
+
 try:
     HTML(output_html).write_pdf(
         output_fn,
         stylesheets=[CSS(string=styles)])
     # Let the user know where it lives now
     print(f"\nSuccess! A PDF from {fn} has been successfully built and saved to:\n{output_fn}\n")
-    open_pdf()
-except:
-    print("There was an error building the PDF. Please ensure you've\ninstalled all requisite dependencies.")
+    success = True
+except AttributeError as ae:
+    print(ae)
+except Exception as unk_e:
+    print(f"There was an error building the PDF.\n{Exception}\n{unk_e}")
 
 # Cleanup build files if they're not wanted
-if not save_buildfiles == True and os.path.isdir(buildfiles_dir):
+if not options.save_buildfile and os.path.isdir(buildfiles_dir):
     shutil.rmtree(buildfiles_dir)
+
+if success == True:
+    open_pdf()

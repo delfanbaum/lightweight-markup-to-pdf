@@ -136,3 +136,5 @@ resources.txt
 */**/fonts/
 output/
 styles/templates
+*.pdf
+*/**/*.pdf
