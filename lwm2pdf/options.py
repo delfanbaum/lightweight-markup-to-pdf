@@ -15,12 +15,14 @@ def get_lwm2pdf_options(supperted_file_types: str):
 
     cli_options_parser.add_argument('-o', '--output',
                                     dest='output',
+                                    action='store',
                                     type=str,
                                     required=False,
                                     help='output filename and destination (optional)')
 
     cli_options_parser.add_argument('-s', '--stylesheet',
                                     dest='stylesheet',
+                                    action='store',
                                     type=str,
                                     required=False,
                                     help='select user stylesheet (css) (optional)')
