@@ -12,7 +12,7 @@ def asciidoc_to_html(fn):
     if result.stderr == '':    
         return result.stdout
     else:
-        raise SystemExit(f'Error: {restult.stderr}')
+        raise SystemExit(f'Error: {result.stderr}')
 
 def md_to_html(fn):
     print("Running input through markdown conversion....")

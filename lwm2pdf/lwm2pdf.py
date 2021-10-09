@@ -3,88 +3,72 @@ import sys
 import os
 import shutil
 import subprocess
-import argparse
-from weasyprint import HTML, CSS
-from cleanhtml import clean_html
+from options import get_lwm2pdf_options
+from os.path import abspath
 from processdocs import asciidoc_to_html, md_to_html
+from cleanhtml import clean_html
+from weasyprint import HTML, CSS
 
-# for help and also bookkeepting
 supperted_file_types = '*.adoc, *.asciidoc, or *.md'
 
+# for later things
 
 
-# options parsing
+#================================================
+# Options
+#================================================
 
-cli_options_parser = argparse.ArgumentParser(prog='lwm2pdf',
-                     usage='%(prog)s [options]',
-                     description=f'Converts {supperted_file_types} into PDFs based on default or user stylesheet (css).')
+# get options
+options = get_lwm2pdf_options(supperted_file_types)
 
-cli_options_parser.add_argument('-i', '--input', 
-                                dest='input',
-                                action='store',
-                                nargs=1, 
-                                type=str, 
-                                required=True,
-                                help=f'the file to convert ({supperted_file_types})')
+# get our input file information
+fn = options.input
+fn_full_path = abspath(fn)
+fn_name_only = fn.split("/")[-1].split('.')[0]
 
-cli_options_parser.add_argument('-o', '--output',
-                                dest='output',
-                                nargs=1,
-                                type=str,
-                                required=False,
-                                help='output filename and destination (optional)')
+# get output destination
+if options.output:
+    if not options.output[-4:] == '.pdf':
+        print('Error: Your output filetype must be ".pdf"')
+        exit()
+    else:
+        output_fn = abspath(options.output)
+        print(output_fn)
+else:
+    print("Using default output destination...")
+    output_fn = os.getcwd()+ f'/{fn_name_only}.pdf' 
 
-cli_options_parser.add_argument('-s', '--stylesheet',
-                                dest='stylesheet',
-                                nargs=1,
-                                type=str,
-                                required=False,
-                                help='select user stylesheet (css) (optional)')
-cli_options_parser.add_argument('-p', '--preserve-buildfiles',
-                                dest='save_buildfile',
-                                required=False,
-                                help='preserve buildfiles in output/src in current working directory')
+# get stylesheet information
+if options.stylesheet:
+    css = abspath(options.stylesheet)
+else: 
+    script_dir = os.path.dirname(__file__)
+    script_home = str(os.path.abspath(script_dir))
+    styles_home = ('/').join(script_home.split('/')[0:-1])
+    css = styles_home + '/styles/manuscript.css'
+
+# do we save our work?
+if options.save_buildfile:
+    save_buildfiles = True
 
 
-options = cli_options_parser.parse_args()
-
-# configuration
 print("\n==============================================================")
 print("Starting the PDF builder script for lighweight markup files...")
 print("================================================================\n")
 
 # get file
 # TO DO: parse based on current dir, add checking, etc.
-fn = options.input
 
-# get just the filename sans ".asciidoc/adoc"
-split_fn = fn.split("/")[-1].split('.')[0]
-
-# place where we put our build files
-current_working_dir = os.getcwd() 
-script_dir = os.path.dirname(__file__)
-script_home = str(os.path.abspath(script_dir))
-styles_home = ('/').join(script_home.split('/')[0:-1])
-
-parent_dir = current_working_dir + '/output/'
-target_dir = current_working_dir + '/output/src/'
-
-sass = styles_home + '/styles/manuscript.scss'
-css = styles_home + '/styles/manuscript.css'
-
-# output file name
-output_html = target_dir + 'buildfile.html'
-print(output_html)
-output_fn = parent_dir + f'{split_fn}.pdf'
+buildfiles_dir = os.getcwd() + f'{fn_name_only}-src'
+output_html = f'{buildfiles_dir}/buildfile.html'
 
 
 # make sure our buildsrc directory exists and is clean
-print("Create or cleanup output directory...")
+print("Creating buildfiles directory...")
 # there is a better way to do this I'm sure but this works for now
-if os.path.isdir(parent_dir):
-    shutil.rmtree(parent_dir)
-os.mkdir(parent_dir)
-os.mkdir(target_dir)
+if os.path.isdir(buildfiles_dir):
+    shutil.rmtree(buildfiles_dir)
+os.mkdir(buildfiles_dir)
 
 # ---------------------------------------------------------------------
 # Conversion step
@@ -99,26 +83,7 @@ elif fn.find('.md') > -1:
     html = md_to_html(fn)
 
 else:
-    SystemExit("Error: It appears you're trying to convert a nonsupported file format.")
-
-
-# ---------------------------------------------------------------------
-# Generate CSS if needed
-# ---------------------------------------------------------------------
-
-# add the css...
-# get most up-to-date stylesheet
-try:
-    print("Checking to see if sass is installed...")
-    subprocess.run(['sass', '-v'], check = True)
-    print("Creating up-to-date stylesheet(s)...")
-    if not os.path.exists(css) == True:
-        os.system(f"sass --style=compressed {sass} {css}")
-    if not os.path.getmtime(css) >= os.path.getmtime(sass):
-        os.system(f"sass --style=compressed {sass} {css}")
-    styles = open(css, 'r').read()
-except subprocess.CalledProcessError:
-    print ("You don't have sass installed on your path. Using the existing stylesheet...")
+    SystemExit(f"Error: It appears you're trying to convert a nonsupported file format. This script accepts only {supperted_file_types} files.")
 
 # ---------------------------------------------------------------------
 # Cleanup the html
@@ -134,6 +99,7 @@ html = clean_html(html)
 open(output_html, 'w').write(html)
 
 # create output for checking/pasting to word
+styles = open(css, 'r').read()
 print(f"Writing styled output for Word copy/paste to buildfile_styled...")
 html_with_styles = html.replace('</head>', f'<style>{styles}</style></head>')
 
@@ -179,4 +145,6 @@ try:
 except:
     print("There was an error building the PDF. Please ensure you've\ninstalled all requisite dependencies.")
 
-
+# Cleanup build files if they're not wanted
+if not save_buildfiles == True and os.path.isdir(buildfiles_dir):
+    shutil.rmtree(buildfiles_dir)
