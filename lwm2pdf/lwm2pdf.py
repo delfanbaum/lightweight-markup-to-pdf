@@ -1,13 +1,11 @@
 #!/usr/bin/python3
-import sys
 import os
 import shutil
-import subprocess
 from options import get_lwm2pdf_options
 from os.path import abspath
 from processdocs import asciidoc_to_html, md_to_html
 from cleanhtml import clean_html
-from weasyprint import HTML, CSS
+from weasyprint import HTML, CSS # type: ignore
 
 supperted_file_types = '*.adoc, *.asciidoc, or *.md'
 

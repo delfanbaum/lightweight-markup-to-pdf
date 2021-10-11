@@ -1,6 +1,6 @@
 import os
 import subprocess
-import markdown2
+import markdown2 # type: ignore
 
 # ---------------------------------------------------------------------
 # Asciidoctor step
