@@ -1,6 +1,6 @@
 import os
 import subprocess
-from markdown import markdown
+import markdown2
 
 # ---------------------------------------------------------------------
 # Asciidoctor step
@@ -18,5 +18,9 @@ def md_to_html(fn):
     print("Running input through markdown conversion....")
     with open(fn, 'r') as f:
         text = f.read()
-        html = markdown(text)
+        html = markdown2.markdown(text, extras=["fenced-code-blocks",
+                                                "header-ids",
+                                                "footnotes",
+                                                "smarty-pants" # save a step?
+                                                ])
     return html

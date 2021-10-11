@@ -138,3 +138,4 @@ output/
 styles/templates
 *.pdf
 */**/*.pdf
+test-docs/src/

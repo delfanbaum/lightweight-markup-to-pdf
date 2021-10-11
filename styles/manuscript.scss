@@ -4,6 +4,7 @@
 
 @import 'xrefs';
 @import 'toc';
+@import 'basic_code_highlighter';
 
 
 //-------------------------------------------------------//
@@ -268,7 +269,7 @@ table caption {
 //                    Footnotes
 //-------------------------------------------------------//
 
-sup.footnote {
+sup.footnote, sup.footnote-ref {
   font-family: $base-font-family;
   font-size: 8pt !important;
   a.footnote {

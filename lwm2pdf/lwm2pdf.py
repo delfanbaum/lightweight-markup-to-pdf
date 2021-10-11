@@ -49,25 +49,22 @@ else:  # defaults
     styles_home = ('/').join(script_home.split('/')[0:-1])
     css = styles_home + '/styles/manuscript.css'
 
-
-
 print("\n==============================================================")
 print("Starting the PDF builder script for lighweight markup files...")
 print("================================================================\n")
 
-# get file
-# TO DO: parse based on current dir, add checking, etc.
-
-buildfiles_dir = os.getcwd() + f'/{fn_name_only}-src'
-output_html = f'{buildfiles_dir}/buildfile.html'
-
-
-# make sure our buildsrc directory exists and is clean
 print("Creating buildfiles directory...")
-# there is a better way to do this I'm sure but this works for now
-if os.path.isdir(buildfiles_dir):
-    shutil.rmtree(buildfiles_dir)
-os.mkdir(buildfiles_dir)
+
+if options.buildfile_dir:
+    buildfiles_dir = abspath(options.buildfile_dir)
+else:
+    buildfiles_dir = os.getcwd() + f'/{fn_name_only}-src'
+
+if not os.path.isdir(buildfiles_dir):
+    # no longer cleaning b/c it'll just overwrite anyway
+    os.mkdir(buildfiles_dir)
+
+output_html = f'{buildfiles_dir}/{fn_name_only}buildfile.html'
 
 # ---------------------------------------------------------------------
 # Conversion step

@@ -59,7 +59,8 @@ def expand_links(match):
     if not match.group(1).find("#") > -1:
         expanded_link = f'{match.group(2)} (<a href="{match.group(1)}">{match.group(1)}</a>)'
         return expanded_link
-    elif not match.group(0).find("class=\"footnote") > -1:
+    # do xrefs but not footnotes... assuming all non-footnotes are xrefs   
+    elif match.group(0).find("class=\"footnote") == -1 and match.group(0).find("href=\"#fn-") == -1:
         xref = f'<a href="{match.group(1)}" data-type="xref">{match.group(2)}</a>'
         return xref
     else:

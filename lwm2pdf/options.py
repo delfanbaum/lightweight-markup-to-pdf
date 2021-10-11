@@ -38,6 +38,12 @@ def get_lwm2pdf_options(supperted_file_types: str):
                                     action="store_true",
                                     required=False,
                                     help='preserve buildfiles in output/src in current working directory')
+    cli_options_parser.add_argument('-bd', '--buildfile-dir',
+                                    dest="buildfile_dir",
+                                    action='store',
+                                    type=str,
+                                    required=False,
+                                    help='destination for buildfile(s) directory')                                
 
 
     return cli_options_parser.parse_args()
