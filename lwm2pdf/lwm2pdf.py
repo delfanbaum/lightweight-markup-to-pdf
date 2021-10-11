@@ -64,7 +64,7 @@ if not os.path.isdir(buildfiles_dir):
     # no longer cleaning b/c it'll just overwrite anyway
     os.mkdir(buildfiles_dir)
 
-output_html = f'{buildfiles_dir}/{fn_name_only}buildfile.html'
+output_html = f'{buildfiles_dir}/{fn_name_only}-buildfile.html'
 
 # ---------------------------------------------------------------------
 # Conversion step
