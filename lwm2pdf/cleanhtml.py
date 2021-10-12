@@ -10,6 +10,8 @@ def clean_html(html: str, section_break_marker: str = '#') -> str:
     # just swap hrs for breaks (will help with copy-paste to word)
     html = html.replace("<hr>",
             f"<div class='section-break'><p>{section_break_marker}</p></div>")
+    html = html.replace("<hr />", # markdown converted handle
+            f"<div class='section-break'><p>{section_break_marker}</p></div>")
 
     # if quotes, fix citation style
     print("Cleaning up blockquotes...")
@@ -25,16 +27,20 @@ def clean_html(html: str, section_break_marker: str = '#') -> str:
     print("Fixing footnotes for print...")
     footnote_r = re.compile(r'<sup class="footnote">\[(.*?)\]</sup>')
     html = re.sub(footnote_r, fix_footnotes, html)
-
+    # asciidoc
     endnotes_r = "<div id=\"footnotes\">\n<div class='section-break'><p>#</p></div>"
-    html = html.replace(endnotes_r, '<div id="footnotes">\n<h2>Notes</h2>')
+    html = html.replace(endnotes_r, 
+                        '<div id="footnotes">\n<h2>Notes</h2>')
+    # markdown
+    endnotes_r_md = '<div class="footnotes">\n<div class=\'section-break\'><p>#</p>'
+    html = html.replace(endnotes_r_md, 
+                        '<div class="footnotes">\n<h2>Notes</h2>')
 
     # make smart quotes for double quotes
     print("Adding smart quotes...")
     quotes_r = re.compile(r'<(p|li)(.*?)>(.*?)</(p|li)>')
     html = re.sub(quotes_r, check_for_quotes, html)
 
-    
 
     return html
 

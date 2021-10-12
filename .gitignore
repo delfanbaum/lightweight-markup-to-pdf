@@ -139,3 +139,4 @@ styles/templates
 *.pdf
 */**/*.pdf
 test-docs/src/
+update_styles.sh
