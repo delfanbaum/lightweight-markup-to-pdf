@@ -45,6 +45,7 @@ else:
 if options.stylesheet:
     css = abspath(options.stylesheet)
 else:  # defaults
+    print("Using default stylesheet...")
     script_dir = os.path.dirname(__file__)
     script_home = str(os.path.abspath(script_dir))
     styles_home = ('/').join(script_home.split('/')[0:-1])
