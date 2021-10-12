@@ -14,7 +14,11 @@ def asciidoc_to_html(fn):
                             capture_output=True, text=True)
         if test_asciidoctor.stderr == '':
             print("Asciidoctor is present; convering with asciidoctor...") 
-            result = subprocess.run(['asciidoctor', '-a', "stylesheet!", "-"], input=text, capture_output=True, text=True)
+            result = subprocess.run(['asciidoctor', '-a', "stylesheet!", 
+            "-o","-",
+            fn], 
+            # input=text, 
+            capture_output=True, text=True)
         if result.stderr == '':    
             return result.stdout
         else:
