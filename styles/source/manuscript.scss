@@ -1,0 +1,378 @@
+//-------------------------------------------------------//
+//                   Component Imports
+//-------------------------------------------------------
+
+@import 'xrefs';
+@import 'toc';
+@import 'basic_code_highlighter';
+
+
+//-------------------------------------------------------//
+//                 Variables and Gettables
+//-------------------------------------------------------
+
+$base-font-size: 12pt;
+$base-font-family: 'Times New Roman', 'Times', 'Courier', serif;
+$base-line-height: 24pt;
+
+#authorFirstName { string-set: authorFirst content(); }
+#authorLastName { string-set: authorLast content(); }
+
+// everything then under here
+
+//-------------------------------------------------------//
+//                    Page Layout Info
+//-------------------------------------------------------//
+
+
+@page {
+  size: 8.5in 11in;
+  margin: 1in;
+  @top-right {
+    content: string(authorLast) " " counter(page);
+    font-family: $base-font-family;
+    font-size: $base-font-size;
+    line-height: $base-line-height;
+  }
+}
+
+@page :first {
+  @top-right {
+    content: string(authorFirst) " " string(authorLast);
+    font-family: $base-font-family;
+    font-size: $base-font-size;
+    line-height: $base-line-height;
+  }
+}
+
+
+//-------------------------------------------------------//
+//                    Font Stuff
+//-------------------------------------------------------//
+
+
+body {
+  margin:0;
+  padding:0;
+  font-family: $base-font-family;
+  font-size: $base-font-size;
+  line-height: $base-line-height;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  margin: 18pt 0 12pt;
+  padding: 0;
+  font-size: $base-font-size;
+  font-weight: bold;
+}
+
+// no margin on first sect one of file
+.sect1:first-child h1 { // LOL not working yet.
+  margin-top: 0;
+}
+
+p {
+  margin:0;
+  padding:0;
+  text-indent: .5in;
+  line-height: $base-line-height;
+  //text-align: justify;
+  // widow and orphan control
+  orphans: 2;
+  widows: 2;
+}
+
+// no indent first paragraph of section
+.paragraph:first-child p {
+  text-indent: 0;
+}
+
+
+code { // note override for novel below
+  font-family: 'Source Code Pro', monospace;
+  font-size: 10pt;
+  background-color: #f7f7f7;
+  padding: 0 1px;
+}
+
+pre { //pre-wrap
+  font-family: 'Source Code Pro', monospace;
+  font-size: 10pt;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  margin: 12pt;
+  background-color: #f7f7f7;
+  padding: 6pt;
+  line-height: 1.12 !important;
+}
+
+a {
+  text-decoration: none;
+  color: #000;
+  font-style: italic;
+}
+
+//-------------------------------------------------------//
+//                  Misc Document Elements
+//-------------------------------------------------------//
+
+
+#header h1 {
+  margin-top: 0;
+  padding-top: 0;
+}
+
+.sidebarblock {
+  margin: 18pt 18pt;
+  padding: 6pt 0;
+  text-align: justify;
+  //border-top: .5px solid #000;
+  //border-bottom: .5px solid #000;
+
+  .title {
+    //margin-bottom: 18pt;
+    text-align: center;
+    font-weight: bold;
+  }
+
+  p {
+    text-indent: .25in
+  }
+
+}
+
+hr { // should be replaced with div.section-break by script, but if not
+  border:0;
+  &:after {
+    content: '#';
+    font-size: $base-font-size;
+    font-family: $base-font-family;
+    color: #000;
+    text-align: center;
+    margin: 12pt auto;
+    display: block;
+  }
+}
+
+div.section-break p {
+  font-size: $base-font-size;
+  font-family: $base-font-family;
+  color: #000;
+  text-align: center !important;
+  margin: 12pt auto;
+  display: block;
+  text-indent: 0 !important;
+}
+
+//-------------------------------------------------------//
+//                    Lists
+//-------------------------------------------------------//
+
+ul, ol, dl {
+  margin: 0 0;
+  padding-left: .25in;
+}
+
+li {
+  margin: 0;
+  p {
+    text-indent: 0;
+    margin: 0;
+    text-align: left;
+    padding-left: 6px;
+  }
+}
+
+dl {
+  margin: 6pt 0;
+
+  dt {
+
+    font-style: italic;
+    code, em {
+      font-style: normal;
+    }
+  }
+  dd {
+    margin-left: .25in; // calculates to .5in
+    p {
+      text-indent: 0;
+    }
+  }
+}
+
+
+//-------------------------------------------------------//
+//                    Tables
+//-------------------------------------------------------//
+
+table, td, tr, th {
+  border: 1px solid #000;
+  border-collapse: collapse;
+  margin: 12px;
+}
+
+th, td {
+  padding: 3pt;
+  vertical-align: top;
+}
+
+.tableblock {
+  font-size: 11pt;
+  text-indent: 0 !important;
+  text-align: left;
+  line-height: 1;
+}
+
+table caption {
+  font-size: 11pt;
+  margin-bottom: 6pt;
+}
+
+
+//-------------------------------------------------------//
+//                    Admonitions
+//-------------------------------------------------------//
+
+.admonitionblock {
+
+  margin: 12pt;
+
+  // clear borders
+  table, tr, td { border:0px solid #fff; }
+
+  td.icon {
+    font-weight: bold;
+    padding-right: 12pt;
+    border-right: 1px solid #000;
+  }
+
+  td.content {
+    padding-left: 12pt;
+
+    div.title {
+      font-style: italic;
+      margin-bottom: 3pt;
+      line-height: 1;
+    }
+  }
+
+  div.paragraph p {
+    font-size: 12pt;
+    text-indent: 0 !important;
+    text-align: left;
+    line-height: 1.12 !important;
+  }
+}
+
+//-------------------------------------------------------//
+//                    Footnotes
+//-------------------------------------------------------//
+
+sup.footnote, sup.footnote-ref {
+  font-family: $base-font-family;
+  font-size: 8pt !important;
+  a.footnote {
+    font-style:normal;
+    font-size: 8pt !important;
+  }
+}
+
+#footnotes {
+  a {font-style: normal;}
+
+  hr {
+    border:0;
+    &:after {
+      content: 'Notes';
+      margin: 18pt 0 12pt;
+      padding: 0;
+      font-size: $base-font-size;
+      font-weight: bold;
+      text-align: left;
+    }
+  }
+}
+
+div.footnote {
+  font-size: 12pt;
+}
+
+// hide back link in docs (markdown)
+.footnoteBackLink {display: none;}
+
+//-------------------------------------------------------//
+//                    Quotes and Verse
+//-------------------------------------------------------//
+
+
+.quoteblock {
+  blockquote {
+    margin: auto .5in;
+
+    div.paragraph p {
+          line-height: 1.5;
+        }
+    }
+
+  .attribution {
+    margin: 0 .5in 18pt;
+
+    cite { font-style: italic;}
+  }
+}
+
+
+.verseblock {
+  pre.content {
+    font-family: $base-font-family;
+    font-size: $base-font-size;
+    break-inside: auto;
+    line-height: 1.12; // assuming you don't want to double space things
+    orphans: 2; 
+    widows: 2;
+  }
+}
+
+
+//-------------------------------------------------------//
+//               Edge Cases and Helpers
+//-------------------------------------------------------//
+
+// remove the asciidoctor footer
+#footer {display: none;}
+
+// hide the author since it's going up top
+.details {font-size:0;}
+
+img {
+  max-width: 90%;
+  margin: 12pt auto;
+}
+
+.small-caps { 
+  font-family: 'Times Small Caps & Old Style Fi', $base-font-family;
+  font-variant: small-caps;
+}
+
+.pagebreak-before {
+  break-before: always;
+}
+
+.pagebreak-after {
+  break-after: always;
+}
+
+.keep-together {
+  break-inside: avoid;
+}
+
+.indent-quarter {
+  margin-left: .25in !important;
+  p {text-indent: 0 !important;}
+}
+
+.no-indent {
+  margin-left:0;
+  p {text-indent: 0 !important;}
+}

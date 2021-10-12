@@ -1,0 +1,11 @@
+// xref handling
+
+a[data-type="xref"]{
+    font-style: normal;
+    &:before {
+        content: '"';
+    }
+    &:after {
+        content: '" on page ' target-counter(attr(href), page);
+    } 
+}

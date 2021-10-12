@@ -1,0 +1,37 @@
+// table of contents
+
+// this is all placeholder, but basically need to figure out a way to have the spacing thing work OK.
+.toc a::after {
+    content: " .... " target-counter(attr(href), page);
+}    
+
+
+// TOC leaders adapted from https://www.w3.org/Style/Examples/007/leaders.en.html
+
+.toc {
+    
+}
+
+ul.leaders {
+    max-width: 40em;
+    padding: 0;
+    overflow-x: hidden;
+    list-style: none}
+ul.leaders li:after {
+    float: left;
+    width: 0;
+    white-space: nowrap;
+    content:
+ ". . . . . . . . . . . . . . . . . . . . "
+ ". . . . . . . . . . . . . . . . . . . . "
+ ". . . . . . . . . . . . . . . . . . . . "
+ ". . . . . . . . . . . . . . . . . . . . "}
+ul.leaders span:first-child {
+    padding-right: 0.33em;
+    background: white}
+ul.leaders span + span {
+    float: right;
+    padding-left: 0.33em;
+    background: white;
+    position: relative;
+    z-index: 1}
