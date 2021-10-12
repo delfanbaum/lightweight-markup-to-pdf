@@ -16,7 +16,7 @@ Currently, `lwm2pdf` supports the following filetypes:
 
 | Option | Description | Required? |
 |--------|-------------|-----------|
-| `-i`, `-input'` | The file to convert (full or relative path) |  True |
+| `-i`, `-input` | The file to convert (full or relative path) |  True |
 | `-o`, `-output` | Output filename and destination (optional) |  False |
 | `-od`,`--output-dir` | Output directory and destination (optional); not recommended for use with the `-o` option |  False |
 | `-s`, `--stylesheet` | Select user stylesheet (css) (optional) |  False |
