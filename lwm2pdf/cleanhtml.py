@@ -36,12 +36,7 @@ def clean_html(html: str, section_break_marker: str = '#') -> str:
     html = html.replace(endnotes_r_md, 
                         '<div class="footnotes">\n<h2>Notes</h2>')
 
-    # make smart quotes for double quotes
-    print("Adding smart quotes...")
-    quotes_r = re.compile(r'<(p|li)(.*?)>(.*?)</(p|li)>')
-    html = re.sub(quotes_r, check_for_quotes, html)
-
-
+    # make smart quotes for double quotes (NOW TAKEN CARE OF IN PROCESSING DOCS)
     return html
 
 
@@ -51,7 +46,7 @@ def split_author_names(match):
     # edge case
     if len(name) > 2:
         first = name[0]
-        middle = name[1] # tbh this won't handle things well
+        #middle = name[1] # tbh this won't handle things well
         last = name[-1]
     else:
         first = name[0]
@@ -80,21 +75,3 @@ def expand_links(match):
 def fix_footnotes(match):
     # <sup class="footnote">[<a id="_footnoteref_1" class="footnote" href="#_footnotedef_1" title="View footnote.">1</a>]</sup>
     return f'<sup class="footnote">{match.group(1)}</sup>'
-
-def check_for_quotes(match):
-    # match group 1 s/b open tag
-    # match group 2 s/b anything inside the open tag
-    # match group 3 s/b text
-    # match gropu 4 s/b close tag
-    inner_html = match.group(3)
-    quote_strings = re.compile(r'(?<!=)"(.*?)"')
-    inner_html = re.sub(quote_strings, smart_quote_pairs, inner_html)
-    return f'<{match.group(1)}{match.group(2)}>{inner_html}</{match.group(4)}>'
-
-
-def smart_quote_pairs(match):
-    # handle case of href="some[" attr="]some otheer"
-    if match.group(1).find('=') == -1:
-        return f'&ldquo;{match.group(1)}&rdquo;'
-    else: 
-        return match.group(0)
