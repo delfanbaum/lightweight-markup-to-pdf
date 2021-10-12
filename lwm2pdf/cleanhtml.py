@@ -7,6 +7,10 @@ def clean_html(html: str, section_break_marker: str = '#') -> str:
     au_r = re.compile(r'<span id="author" class="author">(.*?)</span><br>')
     html = re.sub(au_r, split_author_names, html)
 
+    # just swap hrs for breaks (will help with copy-paste to word)
+    html = html.replace("<hr>",
+            f"<div class='section-break'><p>{section_break_marker}</p></div>")
+
     # if quotes, fix citation style
     print("Cleaning up blockquotes...")
     quote_r = re.compile(r'<div class="attribution">\n&#8212; (.*?)<br>')
@@ -22,14 +26,15 @@ def clean_html(html: str, section_break_marker: str = '#') -> str:
     footnote_r = re.compile(r'<sup class="footnote">\[(.*?)\]</sup>')
     html = re.sub(footnote_r, fix_footnotes, html)
 
+    endnotes_r = "<div id=\"footnotes\">\n<div class='section-break'><p>#</p></div>"
+    html = html.replace(endnotes_r, '<div id="footnotes">\n<h2>Notes</h2>')
+
     # make smart quotes for double quotes
     print("Adding smart quotes...")
     quotes_r = re.compile(r'<(p|li)(.*?)>(.*?)</(p|li)>')
     html = re.sub(quotes_r, check_for_quotes, html)
 
-    # just swap hrs for breaks (will help with copy-paste to word)
-    html = html.replace("<hr>",
-            f"<div class='section-break'><p>{section_break_marker}</p></div>")
+    
 
     return html
 
@@ -60,7 +65,7 @@ def expand_links(match):
         expanded_link = f'{match.group(2)} (<a href="{match.group(1)}">{match.group(1)}</a>)'
         return expanded_link
     # do xrefs but not footnotes... assuming all non-footnotes are xrefs   
-    elif match.group(0).find("class=\"footnote") == -1 and match.group(0).find("href=\"#fn-") == -1:
+    elif match.group(0).find("class=\"footnote") == -1 and match.group(0).find("href=\"#fn-") == -1 and match.group(0).find("href=\"#_footnoteref_") == -1:
         xref = f'<a href="{match.group(1)}" data-type="xref">{match.group(2)}</a>'
         return xref
     else:

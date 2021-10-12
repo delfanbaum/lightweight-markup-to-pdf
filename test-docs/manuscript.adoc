@@ -19,6 +19,16 @@ Suspendisse justo diam, pretium quis ex sed, scelerisque hendrerit felis. Donec 
 
 Nulla luctus fringilla ipsum, egestas congue mi malesuada eget. Maecenas placerat quis metus eget pulvinar. Aliquam aliquam felis mauris, nec convallis est dictum a. Ut vitae ultrices nulla. Aliquam porttitor tortor pretium, elementum leo elementum, venenatis velit. Integer volutpat odio et nunc elementum, vitae tristique eros hendrerit. Mauris sit amet porta nunc, ut lacinia leo. Nullam nec viverra lacus. Ut felis odio, rhoncus nec magna vitae, mollis cursus neque. Integer et sagittis velit. Vestibulum vel vulputate urna. Praesent eget volutpat nunc.
 
+[options="header"]
+.Table example
+|===
+| Heading A | Heading B
+
+| one      | two      
+| three    | four     
+| five     | six      
+|===
+
 Fusce nisi sapien, efficitur et venenatis nec, congue ac dolor. Suspendisse tempus nisi sed suscipit interdum. Nunc vel mauris nibh. Donec nisi libero, suscipit id nunc quis, ullamcorper dapibus mauris. Aliquam quam orci, tempus non tempor a, dictum in metus. Nam lacus sem, interdum quis condimentum at, luctus in massa. Integer odio elit, tempus vitae dictum id, tristique id augue. Ut fermentum, justo at dapibus dapibus, leo orci cursus ante, vel egestas mi eros sit amet arcu. Mauris viverra nisi sit amet tortor tristique condimentum. Interdum et malesuada fames ac ante ipsum primis in faucibus. Phasellus et faucibus tortor.
 
 === Sub-heading A
