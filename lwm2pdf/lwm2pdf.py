@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-import os
+import os, subprocess
 import shutil
 from options import get_lwm2pdf_options
 from os.path import abspath
@@ -33,7 +33,10 @@ if options.output:
         output_fn = abspath(options.output)
         print(output_fn)
 elif options.output_dir:
-    output_fn = os.getcwd() + f'/{options.output_dir}/{fn_name_only}.pdf'
+    if options.output_dir[-1] == '/':
+        output_fn = os.getcwd() + f'/{options.output_dir}{fn_name_only}.pdf'
+    else:    
+        output_fn = os.getcwd() + f'/{options.output_dir}/{fn_name_only}.pdf'
 else:
     print("Using default output destination...")
     output_fn = os.getcwd()+ f'/{fn_name_only}.pdf' 
@@ -108,24 +111,16 @@ def open_pdf():
     # need to rewrite this with subproces?
     ask_to_open = input('Do you want to open the PDF? [y/n] ')
     if ask_to_open == 'y':
-        try: # assume first that we're on a mac, as we usually are
-            os.system(f"open {output_fn}")
-        except:
-            
-            try: # well maybe we're working on a linux machine
-                os.system(f'xdg-open {output_fn}')
-            except OSError as error_not_linux:
-                try: # windows? 
-                    os.startfile(output_fn)
-                except OSError as error_not_win:
-                    # Something went wrong here, so let's show the user what 
-                    # happened.
-                    print("Sorry, I can't seem to open the file. Try opening with your file browser.")
-                    print("Error log:")
-                    # print(error_not_mac)
-                    print(error_not_linux)
-                    print(error_not_win)
-
+        try_mac = subprocess.run(['open', output_fn],
+                                    capture_output=True, text=True)
+        if try_mac.returncode != 0:
+            try_linux = subprocess.run(['xdg-open', output_fn],
+                                    capture_output=True, text=True)
+            if try_linux.returncode != 0:
+                try_pc = subprocess.run(['open', output_fn],
+                                    capture_output=True, text=True)
+                if try_pc.returncode != 0:
+                    print("Sorry, we can't seem to open the file. Try opening with your file browser.")
 
 print("Building PDF...")
 
