@@ -1,3 +1,4 @@
+import enum
 import re
 
 # Clean function to make html nicer for weasyprinting
@@ -21,7 +22,7 @@ def clean_html(html: str, section_break_marker: str = '#') -> str:
     # expand links (and handle cross references)
     print("Expanding links and fixing xrefs for print...")
     link_r = re.compile(r'<a href="(.*?)">(.*?)</a>')
-    html = re.sub(link_r, expand_links, html)
+    html = re.sub(link_r, expand_links_and_xrefs, html)
 
     # fix footnotes
     print("Fixing footnotes for print...")
@@ -36,9 +37,41 @@ def clean_html(html: str, section_break_marker: str = '#') -> str:
     html = html.replace(endnotes_r_md, 
                         '<div class="footnotes">\n<h2>Notes</h2>')
 
-    # make smart quotes for double quotes (NOW TAKEN CARE OF IN PROCESSING DOCS)
+    # make pretty quotes
+    html = convert_quotes(html)
+
     return html
 
+# Convert quotes
+def convert_quotes(html):
+    in_codeblock = False
+    in_verse = False
+
+    # don't match attrs or preformatted quotes (asciidoc)
+    double_quote_strings = re.compile(r'(?<!=)"(.*?)"')
+    single_quote_strings = re.compile(r" '(.*?)' ")
+    code_strings = re.compile(r'<code(.*?)>(.*?)</code>')
+
+    # language-specific things
+    split_html = html.split('\n')
+    for ln_no, line in enumerate(split_html):
+        if line.find('<pre') > -1 and line.find('</pre>') == -1:
+            in_codeblock = True
+        # semi-edge case, but
+        if line.find('class="verseblock') > -1:
+            in_verse = True
+        # Only swap quotes if we're in a code block
+        if not in_codeblock == True or not in_verse == False: 
+            line = re.sub(double_quote_strings, curly_double_quote_pairs, line)
+            line = re.sub(single_quote_strings, curly_single_quote_pairs, line)
+            line = re.sub(code_strings, fix_code_tags, line)
+            split_html[ln_no] = line
+        # if after (not) processing our line, we find that it terminates a 
+        # code block, toggle in_codeblock
+        if line.find('</pre>') > -1:
+            in_codeblock = False
+            in_verse = False
+    return ('\n').join(split_html)
 
 # Match functions
 def split_author_names(match):
@@ -61,7 +94,7 @@ def swap_br_for_comma(match):
     '''
     return newstr
 
-def expand_links(match):
+def expand_links_and_xrefs(match):
     if not match.group(1).find("#") > -1:
         expanded_link = f'{match.group(2)} (<a href="{match.group(1)}">{match.group(1)}</a>)'
         return expanded_link
@@ -75,3 +108,28 @@ def expand_links(match):
 def fix_footnotes(match):
     # <sup class="footnote">[<a id="_footnoteref_1" class="footnote" href="#_footnotedef_1" title="View footnote.">1</a>]</sup>
     return f'<sup class="footnote">{match.group(1)}</sup>'
+
+def curly_double_quote_pairs(match):
+    # handle case of href="some[" attr="]some other"
+    if match.group(1).find('=') == -1 and \
+        match.group(1).find('<') == -1 and \
+        match.group(1)[0] != "`":
+        return f'“{match.group(1)}”'
+    else: 
+        return match.group(0)
+
+def curly_single_quote_pairs(match):
+    if match.group(1).find('=') == -1 and \
+        match.group(1).find('<') == -1 and \
+        match.group(1)[0] != "`":
+        return f' ‘{match.group(1)}’ '
+    else: 
+        return match.group(0)
+
+def fix_code_tags(match):
+    double_quotes = re.compile(r'“|”')
+    single_quotes = re.compile(r'‘|’')
+    code = re.sub(double_quotes, '"', match.group(2))
+    code = re.sub(single_quotes, "'", code)
+    return f'<code{match.group(1)}>{code}</code>'
+
