@@ -1,10 +1,6 @@
 import subprocess
 import markdown2 # type: ignore
 
-# ---------------------------------------------------------------------
-# Asciidoctor step
-# ---------------------------------------------------------------------
-
 def asciidoc_to_html(fn):
     print("Running our input through asciidoc conversion....")
     print("Checking for asciidoctor...")
