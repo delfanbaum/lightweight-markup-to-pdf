@@ -9,3 +9,7 @@ a[data-type="xref"]{
         content: '” on page ' target-counter(attr(href), page);
     } 
 }
+
+.missing-xref {
+    font-style: normal !important;
+}

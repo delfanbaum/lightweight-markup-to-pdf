@@ -20,9 +20,22 @@ def clean_html(html: str, section_break_marker: str = '#') -> str:
     html = re.sub(quote_r, swap_br_for_comma, html)
 
     # expand links (and handle cross references)
+    # NOTE: This does not super handle classes on xref a tags...
     print("Expanding links and fixing xrefs for print...")
     link_r = re.compile(r'<a href="(.*?)">(.*?)</a>')
     html = re.sub(link_r, expand_links_and_xrefs, html)
+
+    # fix missing xrefs
+    xrefs = re.compile(r'<a href="(.*?)" data-type="xref">(.*?)</a>')
+    print(xrefs)
+    for m in re.finditer(xrefs, html):
+        # if the id doesn't exist
+        id = m.group(1)[1:]
+        if html.find(f'id="{id}') == -1:
+            print(f'\nWARNING: Missing xref to #{id}\n')
+            missing_xref_string = f'<a href="#" class="missing-xref">???</a>'
+            html = html.replace(m.group(0), missing_xref_string)
+
 
     # fix footnotes
     print("Fixing footnotes for print...")

@@ -9,7 +9,11 @@ ____
 
 
 [role="first-pagraph"]
-Lorem "ipsum dolor sit amet", "`consectetur adipiscing`" elit. Nam mollis elementum lectus, vel pellentesque ex varius consequat. Sed in odio semper, elementum lorem ut, fringilla augue. Integer mattis, lorem a facilisis maximus, neque dolor sodales leo, sit amet eleifend augue quam varius nisl. Aliquam eleifend risus sit amet orci `commodo mollis`. Duis sit amet nunc rhoncus dui rhoncus finibus et non odio. Maecenas aliquet orci quis tortor finibus lobortis. Praesent dictum dictum nibh `pulvinar "posuere"`. Proin in iaculis turpis. Ut id orci vitae lectus sagittis accumsan. Ut ultricies ac arcu ac vestibulum, see <<sub-a>>.
+Lorem "ipsum dolor sit amet", "`consectetur adipiscing`" elit. Nam mollis elementum lectus, vel pellentesque ex varius consequat. Sed in odio semper, elementum lorem ut, fringilla augue. Integer mattis, lorem a facilisis maximus, neque dolor sodales leo, sit amet eleifend augue quam varius nisl. Aliquam eleifend risus sit amet orci `commodo mollis`. Duis sit amet nunc rhoncus dui rhoncus finibus et non odio. Maecenas aliquet orci quis tortor finibus lobortis. Praesent dictum dictum nibh `pulvinar "posuere"`. Proin in iaculis turpis. Ut id orci vitae lectus sagittis accumsan. 
+
+For this, see <<sub-a>>.
+
+For that, see <<sub-c>>.
 
 [source, bash]
 ----
