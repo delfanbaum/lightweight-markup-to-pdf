@@ -7,6 +7,7 @@ Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur, adi
 There is no one who loves pain itself, who seeks after it and wants to have it, simply because it is pain...
 ____
 
+John's mom said, "Go home, son."
 
 [role="first-pagraph"]
 Lorem "ipsum dolor sit amet", "`consectetur adipiscing`" elit. Nam mollis elementum lectus, vel pellentesque ex varius consequat. Sed in odio semper, elementum lorem ut, fringilla augue. Integer mattis, lorem a facilisis maximus, neque dolor sodales leo, sit amet eleifend augue quam varius nisl. Aliquam eleifend risus sit amet orci `commodo mollis`. Duis sit amet nunc rhoncus dui rhoncus finibus et non odio. Maecenas aliquet orci quis tortor finibus lobortis. Praesent dictum dictum nibh `pulvinar "posuere"`. Proin in iaculis turpis. Ut id orci vitae lectus sagittis accumsan. 
@@ -29,7 +30,7 @@ Fusce lobortis orci justo, a porta ipsum tristique nec. Mauris molestie, enim vi
 [verse]
 ____
 
-Roses are red, violets are blue
+Roses "are" red, 'violets' are blue
 Let me just say, "I love you."
 ____
 

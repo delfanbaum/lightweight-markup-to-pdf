@@ -34,21 +34,12 @@ def clean_html(html: str, section_break_marker: str = '#') -> str:
             print(f'\nWARNING: Missing xref to #{id}\n')
             html = html.replace(m.group(0), missing_xref_string)
 
-
-    # fix footnotes
+    # do footnotes 
     print("Fixing footnotes for print...")
-    footnote_r = re.compile(r'<sup class="footnote">\[(.*?)\]</sup>')
-    html = re.sub(footnote_r, fix_footnotes, html)
-    # asciidoc
-    endnotes_r = "<div id=\"footnotes\">\n<div class='section-break'><p>#</p></div>"
-    html = html.replace(endnotes_r, 
-                        '<div id="footnotes">\n<h2>Notes</h2>')
-    # markdown
-    endnotes_r_md = '<div class="footnotes">\n<div class=\'section-break\'><p>#</p>'
-    html = html.replace(endnotes_r_md, 
-                        '<div class="footnotes">\n<h2>Notes</h2>')
+    html = clean_footnotes(html)
 
     # make pretty quotes
+    print("Making quotes look nice for print...")
     html = convert_quotes(html)
 
     return html
@@ -60,7 +51,7 @@ def convert_quotes(html):
 
     # don't match attrs or preformatted quotes (asciidoc)
     double_quote_strings = re.compile(r'(?<!=)"(.*?)"')
-    single_quote_strings = re.compile(r" '(.*?)' ")
+    single_quote_strings = re.compile(r"'(.*?)'")
     code_strings = re.compile(r'<code(.*?)>(.*?)</code>')
 
     # language-specific things
@@ -72,9 +63,15 @@ def convert_quotes(html):
         if line.find('class="verseblock') > -1:
             in_verse = True
         # Only swap quotes if we're in a code block
-        if not in_codeblock == True or not in_verse == False: 
+        if not in_codeblock == True or in_verse == True:
+            #if the line has a tag in it, separate out the tagss
+            if line.find('>') > -1: 
+                line = line.replace('>',">\n")
+            # do the conversions
             line = re.sub(double_quote_strings, curly_double_quote_pairs, line)
             line = re.sub(single_quote_strings, curly_single_quote_pairs, line)
+            # replace it before workign on code
+            line = line.replace('\n', '')
             line = re.sub(code_strings, fix_code_tags, line)
             split_html[ln_no] = line
         # if after (not) processing our line, we find that it terminates a 
@@ -83,6 +80,23 @@ def convert_quotes(html):
             in_codeblock = False
             in_verse = False
     return ('\n').join(split_html)
+
+
+def clean_footnotes(html):
+    # fix footnotes
+    footnote_r = re.compile(r'<sup class="footnote">\[(.*?)\]</sup>')
+    html = re.sub(footnote_r, fix_footnotes, html)
+
+    # asciidoc
+    endnotes_r = "<div id=\"footnotes\">\n<div class='section-break'><p>#</p></div>"
+    html = html.replace(endnotes_r, 
+                        '<div id="footnotes">\n<h2>Notes</h2>')
+    # markdown
+    endnotes_r_md = '<div class="footnotes">\n<div class=\'section-break\'><p>#</p>'
+    html = html.replace(endnotes_r_md, 
+                        '<div class="footnotes">\n<h2>Notes</h2>')
+    return html
+
 
 # Match functions
 def split_author_names(match):
@@ -124,6 +138,7 @@ def curly_double_quote_pairs(match):
     # handle case of href="some[" attr="]some other"
     if match.group(1).find('=') == -1 and \
         match.group(1).find('<') == -1 and \
+        match.group(1).find('>') == -1 and \
         match.group(1)[0] != "`":
         return f'“{match.group(1)}”'
     else: 
@@ -132,8 +147,9 @@ def curly_double_quote_pairs(match):
 def curly_single_quote_pairs(match):
     if match.group(1).find('=') == -1 and \
         match.group(1).find('<') == -1 and \
+        match.group(1).find('>') == -1 and \
         match.group(1)[0] != "`":
-        return f' ‘{match.group(1)}’ '
+        return f'‘{match.group(1)}’'
     else: 
         return match.group(0)
 
