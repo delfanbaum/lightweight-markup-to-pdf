@@ -1,4 +1,3 @@
-import enum
 import re
 
 # Clean function to make html nicer for weasyprinting
@@ -27,13 +26,12 @@ def clean_html(html: str, section_break_marker: str = '#') -> str:
 
     # fix missing xrefs
     xrefs = re.compile(r'<a href="(.*?)" data-type="xref">(.*?)</a>')
-    print(xrefs)
+    missing_xref_string = f'<a href="#" class="missing-xref">???</a>'
     for m in re.finditer(xrefs, html):
         # if the id doesn't exist
         id = m.group(1)[1:]
         if html.find(f'id="{id}') == -1:
             print(f'\nWARNING: Missing xref to #{id}\n')
-            missing_xref_string = f'<a href="#" class="missing-xref">???</a>'
             html = html.replace(m.group(0), missing_xref_string)
 
 

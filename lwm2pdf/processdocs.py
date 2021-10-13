@@ -1,4 +1,4 @@
-import subprocess, re
+import subprocess
 import markdown2 # type: ignore
 
 # ---------------------------------------------------------------------
