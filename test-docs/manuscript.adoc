@@ -23,8 +23,6 @@ FN_EXAMPLE = "This is a string"
 
 include::include.adoc[]
 
-include::include_test_example.adoc[]
-
 Fusce lobortis orci justo, a porta ipsum tristique nec. Mauris molestie, enim vitae pretium tincidunt, lorem nibh vestibulum justo, in euismod enim mi id mauris. Nulla vel libero id sem rutrum interdum nec at nulla. Cras eleifend iaculis interdum.footnote:[Proin mattis sit amet tortor at facilisis. Aenean viverra suscipit fermentum.] Maecenas cursus viverra elit nec aliquet. Aliquam pulvinar volutpat odio nec consectetur.
 
 [role="test-verse"]
