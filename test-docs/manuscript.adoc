@@ -16,6 +16,8 @@ Lorem "ipsum dolor sit amet", "`consectetur adipiscing`" elit. Nam mollis elemen
 FN_EXAMPLE = "This is a string"
 ----
 
+include::include.adoc[]
+
 Fusce lobortis orci justo, a porta ipsum tristique nec. Mauris molestie, enim vitae pretium tincidunt, lorem nibh vestibulum justo, in euismod enim mi id mauris. Nulla vel libero id sem rutrum interdum nec at nulla. Cras eleifend iaculis interdum.footnote:[Proin mattis sit amet tortor at facilisis. Aenean viverra suscipit fermentum.] Maecenas cursus viverra elit nec aliquet. Aliquam pulvinar volutpat odio nec consectetur.
 
 Suspendisse justo diam, pretium quis ex sed, scelerisque hendrerit felis. Donec maximus ante id nisi pellentesque, sit amet vulputate arcu fringilla. Nam aliquam eu ante in tincidunt. Duis vel nunc augue. Nam vel nulla nec justo eleifend fringilla. Suspendisse tempor iaculis blandit. Aenean mauris neque, iaculis vel mauris id, consequat maximus sem. Nunc vitae gravida odio. In ex magna, viverra id elit quis, lacinia fermentum enim. Nullam ante felis, euismod sit amet odio eu, sollicitudin varius mauris. Proin quis massa ac ante pulvinar interdum vitae a quam.
