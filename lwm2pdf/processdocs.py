@@ -1,10 +1,6 @@
 import subprocess
 import markdown2 # type: ignore
 
-# ---------------------------------------------------------------------
-# Asciidoctor step
-# ---------------------------------------------------------------------
-
 def asciidoc_to_html(fn):
     print("Running our input through asciidoc conversion....")
     print("Checking for asciidoctor...")
@@ -13,7 +9,9 @@ def asciidoc_to_html(fn):
                             capture_output=True, text=True)
         if test_asciidoctor.stderr == '':
             print("Asciidoctor is present; converting with asciidoctor...") 
-            result = subprocess.run(['asciidoctor', '-a', "stylesheet!", fn, "-o", "-"], capture_output=True, text=True)
+            result = subprocess.run(['asciidoctor', '-a', "stylesheet!", 
+            "-o","-", fn], 
+            capture_output=True, text=True)
         if result.stderr == '':    
             return result.stdout
         else:
@@ -27,7 +25,8 @@ def asciidoc_to_html(fn):
         print("best results. Some features may not be available.")
         print("See https://asciidoctor.org/ for more information.\n---")
         print("\nProceeding with asciidoc-py...")
-        result = subprocess.run(['asciidoc', '-b', 'html5', '-a', 'linkcss', '-a', 'disable-javascript', '-o', '-', fn],
+        result = subprocess.run(['asciidoc', '-b', 'html5', '-a', 'linkcss',
+                                    '-a', 'disable-javascript', "-o","-", fn], 
                                     capture_output=True, text=True)
         if result.returncode == 0:    
             html =  result.stdout
@@ -42,11 +41,10 @@ def asciidoc_to_html(fn):
 
 def md_to_html(fn):
     print("Running input through markdown conversion....")
-    with open(fn, 'r') as f:
-        text = f.read()
-        html = markdown2.markdown(text, extras=["fenced-code-blocks",
-                                                "header-ids",
-                                                "footnotes",
-                                                "smarty-pants" # save a step?
-                                                ])
+    text = open(fn, 'r').read()
+    html = markdown2.markdown(text, extras=["fenced-code-blocks",
+                                            "header-ids",
+                                            "footnotes",
+                                            "smarty-pants" # save a step?
+                                            ])
     return html

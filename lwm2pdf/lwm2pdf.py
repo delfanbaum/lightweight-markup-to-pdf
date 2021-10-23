@@ -49,7 +49,7 @@ else:  # defaults
     script_dir = os.path.dirname(__file__)
     script_home = str(os.path.abspath(script_dir))
     styles_home = ('/').join(script_home.split('/')[0:-1])
-    css = styles_home + '/styles/manuscript.css'
+    css = styles_home + '/themes/manuscript.css'
 
 print("\n==============================================================")
 print("Starting the PDF builder script for lighweight markup files...")
