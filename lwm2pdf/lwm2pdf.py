@@ -112,15 +112,24 @@ def open_pdf():
     # need to rewrite this with subproces?
     ask_to_open = input('Do you want to open the PDF? [y/n] ')
     if ask_to_open == 'y':
-        try_mac = subprocess.run(['open', output_fn],
+        try:
+            try_mac = subprocess.run(['open', output_fn],
                                     capture_output=True, text=True)
-        if try_mac.returncode != 0:
-            try_linux = subprocess.run(['xdg-open', output_fn],
+            if try_mac.stderr == '':    
+                return try_mac.stdout                                    
+        except FileNotFoundError:
+            try: 
+                try_linux = subprocess.run(['xdg-open', output_fn],
                                     capture_output=True, text=True)
-            if try_linux.returncode != 0:
-                try_pc = subprocess.run(['open', output_fn],
+                if try_linux.stderr == '':    
+                    return try_linux.stdout   
+            except FileNotFoundError:
+                try: 
+                    try_pc = subprocess.run(['open', output_fn],
                                     capture_output=True, text=True)
-                if try_pc.returncode != 0:
+                    if try_pc.stderr == '':    
+                        return try_pc.stdout                   
+                except:
                     print("Sorry, we can't seem to open the file. Try opening with your file browser.")
 
 print("Building PDF...")
