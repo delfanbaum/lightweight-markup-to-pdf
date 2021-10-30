@@ -6,6 +6,8 @@ from os.path import abspath
 from processdocs import asciidoc_to_html, md_to_html
 from cleanhtml import clean_html
 from weasyprint import HTML, CSS # type: ignore
+from weasyprint.fonts import FontConfiguration # type: ignore
+
 
 supperted_file_types = '*.adoc, *.asciidoc, or *.md'
 
@@ -135,12 +137,13 @@ def open_pdf():
 print("Building PDF...")
 
 # Build final PDF
-success = False
 
 try:
+    font_config= FontConfiguration()
     HTML(output_html).write_pdf(
         output_fn,
-        stylesheets=[CSS(string=styles)])
+        stylesheets=[CSS(string=styles)],
+        font_config=font_config)
     # Let the user know where it lives now
     print(f"\nSuccess! A PDF from {fn} has been successfully built and saved to:\n{output_fn}\n")
     success = True
