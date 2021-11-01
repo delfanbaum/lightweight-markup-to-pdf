@@ -8,7 +8,7 @@ def asciidoc_to_html(fn):
         test_asciidoctor = subprocess.run(['asciidoctor', '-v'], 
                             capture_output=True, text=True)
         if test_asciidoctor.stderr == '':
-            print("Asciidoctor is present; convering with asciidoctor...") 
+            print("Asciidoctor is present; converting with asciidoctor...") 
             result = subprocess.run(['asciidoctor', '-a', "stylesheet!", 
             "-o","-", fn], 
             capture_output=True, text=True)

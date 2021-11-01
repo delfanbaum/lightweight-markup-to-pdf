@@ -6,6 +6,8 @@ from os.path import abspath
 from processdocs import asciidoc_to_html, md_to_html
 from cleanhtml import clean_html
 from weasyprint import HTML, CSS # type: ignore
+from weasyprint.fonts import FontConfiguration # type: ignore
+
 
 supperted_file_types = '*.adoc, *.asciidoc, or *.md'
 
@@ -112,24 +114,35 @@ def open_pdf():
     # need to rewrite this with subproces?
     ask_to_open = input('Do you want to open the PDF? [y/n] ')
     if ask_to_open == 'y':
-        try_mac = subprocess.run(['open', output_fn],
+        try:
+            try_mac = subprocess.run(['open', output_fn],
                                     capture_output=True, text=True)
-        if try_mac.returncode != 0:
-            try_linux = subprocess.run(['xdg-open', output_fn],
+            if try_mac.stderr == '':    
+                return try_mac.stdout                                    
+        except FileNotFoundError:
+            try: 
+                try_linux = subprocess.run(['xdg-open', output_fn],
                                     capture_output=True, text=True)
-            if try_linux.returncode != 0:
-                try_pc = subprocess.run(['open', output_fn],
+                if try_linux.stderr == '':    
+                    return try_linux.stdout   
+            except FileNotFoundError:
+                try: 
+                    try_pc = subprocess.run(['open', output_fn],
                                     capture_output=True, text=True)
-                if try_pc.returncode != 0:
+                    if try_pc.stderr == '':    
+                        return try_pc.stdout                   
+                except:
                     print("Sorry, we can't seem to open the file. Try opening with your file browser.")
 
 print("Building PDF...")
 
 # Build final PDF
 try:
+    font_config= FontConfiguration()
     HTML(output_html).write_pdf(
         output_fn,
-        stylesheets=[CSS(string=styles)])
+        stylesheets=[CSS(string=styles)],
+        font_config=font_config)
     # Let the user know where it lives now
     print(f"\nSuccess! A PDF from {fn} has been successfully built and saved to:\n{output_fn}\n")
     open_pdf()

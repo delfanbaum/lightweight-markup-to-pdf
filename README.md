@@ -7,6 +7,13 @@ Please note that is a work in progress and that I don't actually have any idea o
 
 ## Supported Filetypes
 
+<!---
+
+New edge case for quotes:
+
+"Or maybe whoever he’s sleeping with will be there and will distract him. I wonder who it is. ([.inline-instruction]#Pauses#.) I wonder. ([.inline-instruction]#Pauses#.) And who am I sleeping with? Someone, sometimes."
+
+-->
 Currently, `lwm2pdf` supports the following filetypes:
 
 - Asciidoc (_.adoc_ or _.asciidoc_)
