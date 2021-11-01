@@ -110,7 +110,7 @@ open(output_html.replace('.html', "_styled.html"), 'w').write(html_with_styles)
 # ---------------------------------------------------------------------
 
 # helper 
-def open_pdf():
+def open_pdf(output_fn):
     # need to rewrite this with subproces?
     ask_to_open = input('Do you want to open the PDF? [y/n] ')
     if ask_to_open == 'y':
@@ -145,7 +145,7 @@ try:
         font_config=font_config)
     # Let the user know where it lives now
     print(f"\nSuccess! A PDF from {fn} has been successfully built and saved to:\n{output_fn}\n")
-    open_pdf()
+    open_pdf(output_fn)
 except AttributeError as ae:
     print(ae)
 except Exception as unk_e:
