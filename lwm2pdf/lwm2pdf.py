@@ -126,15 +126,13 @@ def open_pdf():
 print("Building PDF...")
 
 # Build final PDF
-success = False
-
 try:
     HTML(output_html).write_pdf(
         output_fn,
         stylesheets=[CSS(string=styles)])
     # Let the user know where it lives now
     print(f"\nSuccess! A PDF from {fn} has been successfully built and saved to:\n{output_fn}\n")
-    success = True
+    open_pdf()
 except AttributeError as ae:
     print(ae)
 except Exception as unk_e:
@@ -147,8 +145,3 @@ if not options.save_buildfile and os.path.isdir(buildfiles_dir):
 #     subprocess to move the directory
 #     mv -r buildfiles_dir
 # else: # move them to wherever the output file is
-
-
-
-if success == True:
-    open_pdf()
