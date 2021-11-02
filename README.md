@@ -46,6 +46,6 @@ Some known issues include:
 
 - Table handling is not the best
 - All footnotes are rendered as end notes (this is a constraint from WeasyPrint)
-- No tests :'(
+- No tests :'( (UPDATE: Like two tests!)
 - Markdown support is spotty
 - Code highlighting is not working as expected.
