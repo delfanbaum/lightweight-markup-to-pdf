@@ -138,7 +138,7 @@ print("Building PDF...")
 
 # Build final PDF
 try:
-    font_config= FontConfiguration()
+    font_config = FontConfiguration()
     HTML(output_html).write_pdf(
         output_fn,
         stylesheets=[CSS(string=styles)],
