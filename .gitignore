@@ -140,3 +140,4 @@ styles/templates
 */**/*.pdf
 test-docs/src/
 update_styles.sh
+*/**/techbook.*css
