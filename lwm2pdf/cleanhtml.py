@@ -39,8 +39,11 @@ def clean_html(html: str, section_break_marker: str = '#') -> str:
     html = clean_footnotes(html)
 
     # make pretty quotes
-    print("Making quotes look nice for print...")
-    html = convert_quotes(html)
+    try:
+        print("Making quotes look nice for print...")
+        html = convert_quotes(html)
+    except:
+        print("Error converting quotes... continuing.")
 
     return html
 
