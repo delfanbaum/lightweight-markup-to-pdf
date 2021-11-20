@@ -139,21 +139,29 @@ def fix_footnotes(match):
 
 def curly_double_quote_pairs(match):
     # handle case of href="some[" attr="]some other"
-    if match.group(1).find('=') == -1 and \
-        match.group(1).find('<') == -1 and \
-        match.group(1).find('>') == -1 and \
-        match.group(1)[0] != "`":
-        return f'“{match.group(1)}”'
-    else: 
+    try:
+        if match.group(1).find('=') == -1 and \
+            match.group(1).find('<') == -1 and \
+            match.group(1).find('>') == -1 and \
+            match.group(1)[0] != "`":
+            return f'“{match.group(1)}”'
+        else: 
+            return match.group(0)
+    except:
+        print(f'Something went wrong at {match.group(0)}')
         return match.group(0)
 
 def curly_single_quote_pairs(match):
-    if match.group(1).find('=') == -1 and \
-        match.group(1).find('<') == -1 and \
-        match.group(1).find('>') == -1 and \
-        match.group(1)[0] != "`":
-        return f'‘{match.group(1)}’'
-    else: 
+    try:
+        if match.group(1).find('=') == -1 and \
+            match.group(1).find('<') == -1 and \
+            match.group(1).find('>') == -1 and \
+            match.group(1)[0] != "`":
+            return f'‘{match.group(1)}’'
+        else: 
+            return match.group(0)
+    except:
+        print(f'Something went wrong at {match.group(0)}')
         return match.group(0)
 
 def fix_code_tags(match):
