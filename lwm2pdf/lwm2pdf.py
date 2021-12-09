@@ -8,106 +8,104 @@ from cleanhtml import clean_html
 from weasyprint import HTML, CSS # type: ignore
 from weasyprint.fonts import FontConfiguration # type: ignore
 
-
-supperted_file_types = '*.adoc, *.asciidoc, or *.md'
-
-# for later things
-
-
-#================================================
-# Options
-#================================================
-
-# get options
-options = get_lwm2pdf_options(supperted_file_types)
-
-# get our input file information
-fn = options.input
-fn_full_path = abspath(fn)
-fn_name_only = fn.split("/")[-1].split('.')[0]
+supported_file_types = '*.adoc, *.asciidoc, or *.md'
 
 # get output destination
-if options.output:
-    if not options.output[-4:] == '.pdf':
-        print('Error: Your output filetype must be ".pdf"')
-        exit()
+def get_output_fn(options):
+    """
+    Takes options and returns output filename
+    """
+    # get the name only
+    fn = options.input.split("/")[-1].split('.')[0]
+
+    if options.output:
+        if not options.output[-4:] == '.pdf':
+            print('Error: Your output filetype must be ".pdf"')
+            exit()
+        else:
+            output_fn = abspath(options.output)
+            print(output_fn)
+    elif options.output_dir:
+        if options.output_dir[-1] == '/':
+            output_fn = os.getcwd() + f'/{options.output_dir}{fn}.pdf'
+        else:    
+            output_fn = os.getcwd() + f'/{options.output_dir}/{fn}.pdf'
     else:
-        output_fn = abspath(options.output)
-        print(output_fn)
-elif options.output_dir:
-    if options.output_dir[-1] == '/':
-        output_fn = os.getcwd() + f'/{options.output_dir}{fn_name_only}.pdf'
-    else:    
-        output_fn = os.getcwd() + f'/{options.output_dir}/{fn_name_only}.pdf'
-else:
-    print("Using default output destination...")
-    output_fn = os.getcwd()+ f'/{fn_name_only}.pdf' 
+        # print("Using default output destination...")
+        output_fn = os.getcwd()+ f'/{fn}.pdf' 
+    return output_fn
 
 # get stylesheet information
-if options.stylesheet:
-    css = abspath(options.stylesheet)
-else:  # defaults
-    print("Using default stylesheet...")
-    script_dir = os.path.dirname(__file__)
-    script_home = str(os.path.abspath(script_dir))
-    styles_home = ('/').join(script_home.split('/')[0:-1])
-    css = styles_home + '/themes/manuscript.css'
+def get_stylesheet(options):
+    """
+    Takes options and returns css path
+    """
+    if options.stylesheet:
+        css = abspath(options.stylesheet)
+    else:  # defaults
+        print("Using default stylesheet...")
+        script_dir = os.path.dirname(__file__)
+        script_home = str(os.path.abspath(script_dir))
+        styles_home = ('/').join(script_home.split('/')[0:-1])
+        css = styles_home + '/themes/manuscript.css'
+    return css
 
-print("\n==============================================================")
-print("Starting the PDF builder script for lighweight markup files...")
-print("================================================================\n")
+def create_buildfiles_dir(options):
+    """
+    Takes options and returns buildfiles directory
+    path and output_html name
+    """
+    # get only the name no extension
+    fn = options.input.split("/")[-1].split('.')[0]
 
-print("Creating buildfiles directory...")
+    if options.buildfile_dir:
+        buildfiles_dir = abspath(options.buildfile_dir)
+    else:
+        buildfiles_dir = os.getcwd() + f'/{fn}-src'
 
-if options.buildfile_dir:
-    buildfiles_dir = abspath(options.buildfile_dir)
-else:
-    buildfiles_dir = os.getcwd() + f'/{fn_name_only}-src'
-
-if not os.path.isdir(buildfiles_dir):
-    # no longer cleaning b/c it'll just overwrite anyway
-    os.mkdir(buildfiles_dir)
-
-output_html = f'{buildfiles_dir}/{fn_name_only}-buildfile.html'
-
-# ---------------------------------------------------------------------
-# Conversion step
-# ---------------------------------------------------------------------
-
-# handle asciidoc
-if fn.find('.adoc') > -1 or fn.find('.asciidoc') > 1:
-    html = asciidoc_to_html(fn)
-
-# handle markdown
-elif fn.find('.md') > -1:
-    html = md_to_html(fn)
-
-else:
-    SystemExit(f"Error: It appears you're trying to convert a nonsupported file format. This script accepts only {supperted_file_types} files.")
-
-# ---------------------------------------------------------------------
-# Cleanup the html
-# ---------------------------------------------------------------------
-
-html = clean_html(html)
+    if not os.path.isdir(buildfiles_dir):
+        # no longer cleaning b/c it'll just overwrite anyway
+        os.mkdir(buildfiles_dir)
+    output_html = f'{buildfiles_dir}/{fn}-buildfile.html'
     
-# ---------------------------------------------------------------------
-# Create html output for building and also for troubleshooting
-# ---------------------------------------------------------------------
+    return output_html, buildfiles_dir
 
-# finish for pdf_build
-open(output_html, 'w').write(html)
+def convert_markup_to_html(fn, supported_file_types):
+    """
+    Takes a markup file and returns html
+    """
 
-# create output for checking/pasting to word
-styles = open(css, 'r').read()
-print(f"Writing styled output for Word copy/paste to buildfile_styled...")
-html_with_styles = html.replace('</head>', f'<style>{styles}</style></head>')
+    # handle asciidoc
+    if fn.find('.adoc') > -1 or fn.find('.asciidoc') > 1:
+        html = asciidoc_to_html(fn)
 
-open(output_html.replace('.html', "_styled.html"), 'w').write(html_with_styles)
+    # handle markdown
+    elif fn.find('.md') > -1:
+        html = md_to_html(fn)
 
-# ---------------------------------------------------------------------
-# Build the (final) PDF
-# ---------------------------------------------------------------------
+    else:
+        SystemExit(f"Error: It appears you're trying to convert a nonsupported file format. This script accepts only {supported_file_types} files.")
+    return html
+
+
+# Build final PDF
+def build_pdf_from_html(source_fn, output_html, output_fn, styles):
+    """
+    takes a source name, html file, output location, and css, and creates a pdf
+    """
+    try:
+        font_config = FontConfiguration()
+        HTML(output_html).write_pdf(
+            output_fn,
+            stylesheets=[CSS(string=styles)],
+            font_config=font_config)
+        # Let the user know where it lives now
+        print(f"\nSuccess! A PDF from {source_fn} has been successfully built and saved to:\n{output_fn}\n")
+        open_pdf(output_fn)
+    except AttributeError as ae:
+        print(ae)
+    except Exception as unk_e:
+        print(f"There was an error building the PDF.\n{Exception}\n{unk_e}")
 
 # helper 
 def open_pdf(output_fn):
@@ -134,27 +132,41 @@ def open_pdf(output_fn):
                 except:
                     print("Sorry, we can't seem to open the file. Try opening with your file browser.")
 
-print("Building PDF...")
+def main():
+    # get options
+    options = get_lwm2pdf_options(supported_file_types)
 
-# Build final PDF
-try:
-    font_config = FontConfiguration()
-    HTML(output_html).write_pdf(
-        output_fn,
-        stylesheets=[CSS(string=styles)],
-        font_config=font_config)
-    # Let the user know where it lives now
-    print(f"\nSuccess! A PDF from {fn} has been successfully built and saved to:\n{output_fn}\n")
-    open_pdf(output_fn)
-except AttributeError as ae:
-    print(ae)
-except Exception as unk_e:
-    print(f"There was an error building the PDF.\n{Exception}\n{unk_e}")
+    # get our input file information
+    fn = options.input
+    fn_full_path = abspath(fn)
+    fn_name_only = fn.split("/")[-1].split('.')[0]
 
-# Cleanup build files if they're not wanted
-if not options.save_buildfile and os.path.isdir(buildfiles_dir):
-    shutil.rmtree(buildfiles_dir)
-# elif options.output_dir:
-#     subprocess to move the directory
-#     mv -r buildfiles_dir
-# else: # move them to wherever the output file is
+    # get output information
+    output_fn = get_output_fn(options)
+    # get stylesheet
+    css = get_stylesheet(options)
+    with open(css, 'r') as f:
+        styles = f.read()
+    # create build dir, get out_fn
+    output_html, buildfiles_dir = create_buildfiles_dir(options, fn_name_only)
+    # convert step
+    html = convert_markup_to_html(fn_full_path)
+    # clean and write html
+    html = clean_html(html)
+    with open(output_html, 'w') as f:
+        f.write(html)
+    # write styles into styled saver
+    with open(output_html.replace('.html', "_styled.html"), 'w') as f:
+        html_with_styles = html.replace('</head>', f'<style>{styles}</style></head>')
+        f.write(html_with_styles)
+
+    # build the pdf
+    build_pdf_from_html(fn_name_only, output_html, output_fn, css)
+
+    # cleanup 
+    if not options.save_buildfile and os.path.isdir(buildfiles_dir):
+        shutil.rmtree(buildfiles_dir)
+
+
+# if __name__ == '__main__':
+#     lwm_to_pdf()
