@@ -45,6 +45,7 @@ See _requirements.txt_ for Python requirements. For optimal asciidoc conversion,
 
 Some known issues include:
 
+- Right now you need to run it as a script, e.g., `python3 /path/to/lwm2pdf.py [options]`. I'll figure out how to add it to your path someday...
 - Table handling is not the best
 - All footnotes are rendered as end notes (this is a constraint from WeasyPrint)
 - No tests :'( (UPDATE: Like two tests!)
