@@ -9,9 +9,9 @@ def clean_html(html: str, section_break_marker: str = '#') -> str:
 
     # just swap hrs for breaks (will help with copy-paste to word)
     html = html.replace("<hr>",
-            f"<div class='section-break'><p>{section_break_marker}</p></div>")
+            f"<div class=\"section-break\"><p>{section_break_marker}</p></div>")
     html = html.replace("<hr />", # markdown converted handle
-            f"<div class='section-break'><p>{section_break_marker}</p></div>")
+            f"<div class=\"section-break\"><p>{section_break_marker}</p></div>")
 
     # if quotes, fix citation style
     print("Cleaning up blockquotes...")

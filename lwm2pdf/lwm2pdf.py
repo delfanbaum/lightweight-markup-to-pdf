@@ -110,9 +110,14 @@ open(output_html.replace('.html', "_styled.html"), 'w').write(html_with_styles)
 # ---------------------------------------------------------------------
 
 # helper 
-def open_pdf(output_fn):
+def open_pdf(output_fn, ask):
     # need to rewrite this with subproces?
-    ask_to_open = input('Do you want to open the PDF? [y/n] ')
+    if ask == 'y':
+        ask_to_open = 'y'
+    elif ask == 'n':
+        ask_to_open = "n"
+    else:
+        ask_to_open = input('Do you want to open the PDF? [y/n] ')
     if ask_to_open == 'y':
         try:
             try_mac = subprocess.run(['open', output_fn],
@@ -145,7 +150,7 @@ try:
         font_config=font_config)
     # Let the user know where it lives now
     print(f"\nSuccess! A PDF from {fn} has been successfully built and saved to:\n{output_fn}\n")
-    open_pdf(output_fn)
+    open_pdf(output_fn, options.ask_to_open)
 except AttributeError as ae:
     print(ae)
 except Exception as unk_e:

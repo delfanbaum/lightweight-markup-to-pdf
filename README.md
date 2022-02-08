@@ -29,6 +29,7 @@ Currently, `lwm2pdf` supports the following filetypes:
 | `-s`, `--stylesheet` | Select user stylesheet (css) (optional) |  False |
 | `-p`, `--preserve-buildfiles` | Preserve buildfiles in output/src in current working directory or buildfile directory | False |
 | `-b`',`--buildfile-dir` | Destination for buildfile(s) directory | False |
+| `--open` | "y" or "n" to automatically open or not open the pdf (doesn't ask) | `'ask'` |
 
 ## Stylesheets and Themes
 

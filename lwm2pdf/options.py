@@ -44,6 +44,10 @@ def get_lwm2pdf_options(supperted_file_types: str):
                                     type=str,
                                     required=False,
                                     help='destination for buildfile(s) directory')                                
-
+    cli_options_parser.add_argument('--open',
+                                    action='store',
+                                    type=str,
+                                    required=False,
+                                    dest='ask_to_open')
 
     return cli_options_parser.parse_args()
