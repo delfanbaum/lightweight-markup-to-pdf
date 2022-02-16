@@ -51,3 +51,4 @@ Some known issues include:
 - No tests :'( (UPDATE: Like two tests!)
 - Markdown support is spotty
 - Code highlighting is not working as expected.
+- Image URIs have to be absolute paths for Weasyprint (as far as I can tell); the script should add those in (lots of edge cases -- be weary!)
