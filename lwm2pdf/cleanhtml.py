@@ -3,7 +3,6 @@ import re
 # Clean function to make html nicer for weasyprinting
 def clean_html(html: str, section_break_marker: str = '#') -> str:
     # split the author info
-    print("Splitting author name for page numbering...")
     au_r = re.compile(r'<span id="author" class="author">(.*?)</span><br>')
     html = re.sub(au_r, split_author_names, html)
 

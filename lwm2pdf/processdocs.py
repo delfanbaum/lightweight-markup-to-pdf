@@ -16,7 +16,9 @@ def asciidoc_to_html(fn):
             return result.stdout
         else:
             # raise SystemExit(f'Error: {result.stderr}')
-            print(f'Error: {result.stderr}')
+            print(f'\nError: {result.stderr}')
+            print("Exiting...")
+            exit()
 
     except FileNotFoundError:
         print("\n---\nWARNING: Asciidoctor was not found on your PATH.")
