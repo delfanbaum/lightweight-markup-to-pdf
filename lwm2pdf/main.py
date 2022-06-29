@@ -1,7 +1,8 @@
 from lwm2pdf.options import get_lwm2pdf_options
 from lwm2pdf.process_options import (
         get_fn_information,
-        get_output_fn_information
+        get_output_fn_information,
+        get_stylesheet_from_options
         )
 
 supported_file_types = '*.adoc, *.asciidoc, or *.md'
@@ -16,6 +17,7 @@ def main():
     
     fn, fn_path, fn_name = get_fn_information(options.input)
     output_fn = get_output_fn_information(options, fn_name) 
+    css = get_stylesheet_from_options(options)
 
 
 if __name__ == '__main__':

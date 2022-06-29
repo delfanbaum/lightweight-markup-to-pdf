@@ -29,3 +29,16 @@ def get_output_fn_information(options, fn_name_only):
         output_fn = os.getcwd() + f'/{fn_name_only}.pdf'
 
     return output_fn
+
+
+def get_stylesheet_from_options(options):
+    """ get the stylesheet or return default """
+    if options.stylesheet:
+        css = abspath(options.stylesheet)
+    else:  # defaults
+        print("Using default stylesheet...")
+        script_dir = os.path.dirname(__file__)
+        script_home = str(os.path.abspath(script_dir))
+        styles_home = ('/').join(script_home.split('/')[0:-1])
+        css = styles_home + '/themes/manuscript.css'
+    return css
