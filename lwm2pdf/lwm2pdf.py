@@ -28,11 +28,10 @@ if options.output:
         exit()
     else:
         output_fn = abspath(options.output)
-        print(output_fn)
 elif options.output_dir:
     if options.output_dir[-1] == '/':
         output_fn = os.getcwd() + f'/{options.output_dir}{fn_name_only}.pdf'
-    else:    
+    else:
         output_fn = os.getcwd() + f'/{options.output_dir}/{fn_name_only}.pdf'
 else:
     print("Using default output destination...")
@@ -49,7 +48,7 @@ else:  # defaults
     css = styles_home + '/themes/manuscript.css'
 
 print("\n==============================================================")
-print("Starting the PDF builder script for lighweight markup files...")
+print("Starting the PDF builder script for lightweight markup files...")
 print("================================================================\n")
 
 print("Creating buildfiles directory...")

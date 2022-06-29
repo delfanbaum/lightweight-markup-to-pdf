@@ -1,11 +1,12 @@
 import argparse
 
 
-def get_lwm2pdf_options(supperted_file_types: str):
+def get_lwm2pdf_options(supported_file_types: str, argv=None):
     """
     main app options parsing
     """
-    desc_str = f'Converts {supperted_file_types} into PDFs based on' + \
+    supported_file_types = ""
+    desc_str = f'Converts {supported_file_types} into PDFs based on' + \
                'default or user stylesheet (css).'
 
     cli_options_parser = argparse.ArgumentParser(prog='lwm2pdf',
@@ -18,7 +19,7 @@ def get_lwm2pdf_options(supperted_file_types: str):
                                     type=str,
                                     required=True,
                                     help='the file to convert' +
-                                         f'({supperted_file_types})')
+                                         f'({supported_file_types})')
 
     cli_options_parser.add_argument('-o', '--output',
                                     dest='output',
@@ -50,7 +51,7 @@ def get_lwm2pdf_options(supperted_file_types: str):
                                     required=False,
                                     help='preserve buildfiles in output/src' +
                                          'in current working directory')
-    
+
     cli_options_parser.add_argument('-bd', '--buildfile-dir',
                                     dest="buildfile_dir",
                                     action='store',
@@ -65,4 +66,4 @@ def get_lwm2pdf_options(supperted_file_types: str):
                                     required=False,
                                     dest='ask_to_open')
 
-    return cli_options_parser.parse_args()
+    return cli_options_parser.parse_args(argv)
