@@ -1,7 +1,10 @@
 import re
 
-# Clean function to make html nicer for weasyprinting
+
 def clean_html(html: str, section_break_marker: str = '#') -> str:
+    """
+    A clean function to make the html nicer for weasyprinting
+    """
     # split the author info
     au_r = re.compile(r'<span id="author" class="author">(.*?)</span><br>')
     html = re.sub(au_r, split_author_names, html)
@@ -9,7 +12,7 @@ def clean_html(html: str, section_break_marker: str = '#') -> str:
     # just swap hrs for breaks (will help with copy-paste to word)
     html = html.replace("<hr>",
             f"<div class=\"section-break\"><p>{section_break_marker}</p></div>")
-    html = html.replace("<hr />", # markdown converted handle
+    html = html.replace("<hr />",  # markdown converted handle
             f"<div class=\"section-break\"><p>{section_break_marker}</p></div>")
 
     # if quotes, fix citation style
@@ -25,7 +28,7 @@ def clean_html(html: str, section_break_marker: str = '#') -> str:
 
     # fix missing xrefs
     xrefs = re.compile(r'<a href="(.*?)" data-type="xref">(.*?)</a>')
-    missing_xref_string = f'<a href="#" class="missing-xref">???</a>'
+    missing_xref_string = '<a href="#" class="missing-xref">???</a>'
     for m in re.finditer(xrefs, html):
         # if the id doesn't exist
         id = m.group(1)[1:]
@@ -33,7 +36,7 @@ def clean_html(html: str, section_break_marker: str = '#') -> str:
             print(f'\nWARNING: Missing xref to #{id}\n')
             html = html.replace(m.group(0), missing_xref_string)
 
-    # do footnotes 
+    # do footnotes
     print("Fixing footnotes for print...")
     html = clean_footnotes(html)
 
@@ -46,8 +49,9 @@ def clean_html(html: str, section_break_marker: str = '#') -> str:
 
     return html
 
-# Convert quotes
+
 def convert_quotes(html):
+    """ convert regular quotes to nice quotes if possible """
     in_codeblock = False
     in_verse = False
 
@@ -76,7 +80,7 @@ def convert_quotes(html):
             line = line.replace('\n', '')
             line = re.sub(code_strings, fix_code_tags, line)
             split_html[ln_no] = line
-        # if after (not) processing our line, we find that it terminates a 
+        # if after (not) processing our line, we find that it terminates a
         # code block, toggle in_codeblock
         if line.find('</pre>') > -1:
             in_codeblock = False
@@ -85,7 +89,7 @@ def convert_quotes(html):
 
 
 def clean_footnotes(html):
-    # fix footnotes
+    """ clean up footnotes """
     footnote_r = re.compile(r'<sup class="footnote">\[(.*?)\]</sup>')
     html = re.sub(footnote_r, fix_footnotes, html)
 
@@ -102,18 +106,21 @@ def clean_footnotes(html):
 
 # Match functions
 def split_author_names(match):
+    """ if possible, split author name """
     name = match.group(1).split(' ')
     # edge case
     if len(name) > 2:
         first = name[0]
-        #middle = name[1] # tbh this won't handle things well
         last = name[-1]
     else:
         first = name[0]
         last = name[-1]
-    return f"<span id='authorFirstName'>{first}</span>&nbsp<span id='authorLastName'>{last}</span>"
+    return f"<span id='authorFirstName'>{first}</span>&nbsp;" + \
+           f"<span id='authorLastName'>{last}</span>"
+
 
 def swap_br_for_comma(match):
+    """ fix for asciidoc(tor) attributions """
     str = match.group(1)
     newstr = f'''
         <div class="attribution">
@@ -121,52 +128,71 @@ def swap_br_for_comma(match):
     '''
     return newstr
 
+
 def expand_links_and_xrefs(match):
+    """
+    since this is print, expand links such that they appear after anchored text
+    """
     if not match.group(1).find("#") > -1:
         expanded_link = f'{match.group(2)} (<a href="{match.group(1)}">{match.group(1)}</a>)'
         return expanded_link
-    # do xrefs but not footnotes... assuming all non-footnotes are xrefs   
-    elif match.group(0).find("class=\"footnote") == -1 and match.group(0).find("href=\"#fn-") == -1 and match.group(0).find("href=\"#_footnoteref_") == -1:
+
+    # do xrefs but not footnotes... assuming all non-footnotes are xrefs
+    elif (
+        match.group(0).find("class=\"footnote") == -1 and
+        match.group(0).find("href=\"#fn-") == -1 and
+        match.group(0).find("href=\"#_footnoteref_") == -1
+       ):
         xref = f'<a href="{match.group(1)}" data-type="xref">{match.group(2)}</a>'
         return xref
     else:
         return match.group(0)
 
+
 def fix_footnotes(match):
-    # <sup class="footnote">[<a id="_footnoteref_1" class="footnote" href="#_footnotedef_1" title="View footnote.">1</a>]</sup>
+    """
+    Takes the <sup> footnotes and renders them more appropriately.
+    """
     return f'<sup class="footnote">{match.group(1)}</sup>'
+
 
 def curly_double_quote_pairs(match):
     # handle case of href="some[" attr="]some other"
     try:
-        if match.group(1).find('=') == -1 and \
-            match.group(1).find('<') == -1 and \
-            match.group(1).find('>') == -1 and \
-            match.group(1)[0] != "`":
+        if (
+            match.group(1).find('=') == -1 and
+            match.group(1).find('<') == -1 and
+            match.group(1).find('>') == -1 and
+            match.group(1)[0] != "`"
+        ):
             return f'“{match.group(1)}”'
-        else: 
+        else:
             return match.group(0)
     except:
         print(f'Something went wrong at {match.group(0)}')
         return match.group(0)
+
 
 def curly_single_quote_pairs(match):
     try:
-        if match.group(1).find('=') == -1 and \
-            match.group(1).find('<') == -1 and \
-            match.group(1).find('>') == -1 and \
-            match.group(1)[0] != "`":
+        if (
+            match.group(1).find('=') == -1 and
+            match.group(1).find('<') == -1 and
+            match.group(1).find('>') == -1 and
+            match.group(1)[0] != "`"
+        ):
             return f'‘{match.group(1)}’'
-        else: 
+        else:
             return match.group(0)
     except:
         print(f'Something went wrong at {match.group(0)}')
         return match.group(0)
 
+
 def fix_code_tags(match):
+    """ fix fancy-quote errors inside code tags """
     double_quotes = re.compile(r'“|”')
     single_quotes = re.compile(r'‘|’')
     code = re.sub(double_quotes, '"', match.group(2))
     code = re.sub(single_quotes, "'", code)
     return f'<code{match.group(1)}>{code}</code>'
-

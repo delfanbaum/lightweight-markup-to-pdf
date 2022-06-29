@@ -1,22 +1,17 @@
-#!/usr/bin/python3
-import os, subprocess
+import os
+import subprocess
 import shutil
 from options import get_lwm2pdf_options
 from os.path import abspath
 from processdocs import asciidoc_to_html, md_to_html
 from cleanhtml import clean_html
-from weasyprint import HTML, CSS # type: ignore
-from weasyprint.fonts import FontConfiguration # type: ignore
+from weasyprint import HTML, CSS  # type: ignore
+from weasyprint.fonts import FontConfiguration  # type: ignore
 
 
 supperted_file_types = '*.adoc, *.asciidoc, or *.md'
 
-# for later things
-
-
-#================================================
 # Options
-#================================================
 
 # get options
 options = get_lwm2pdf_options(supperted_file_types)
@@ -41,7 +36,7 @@ elif options.output_dir:
         output_fn = os.getcwd() + f'/{options.output_dir}/{fn_name_only}.pdf'
 else:
     print("Using default output destination...")
-    output_fn = os.getcwd()+ f'/{fn_name_only}.pdf' 
+    output_fn = os.getcwd() + f'/{fn_name_only}.pdf'
 
 # get stylesheet information
 if options.stylesheet:
@@ -83,14 +78,17 @@ elif fn.find('.md') > -1:
     html = md_to_html(fn)
 
 else:
-    SystemExit(f"Error: It appears you're trying to convert a nonsupported file format. This script accepts only {supperted_file_types} files.")
+    html = None
+    SystemExit("Error: It appears you're trying to convert a nonsupported" +
+               "file format. This script accepts only " +
+               f"{supperted_file_types} files.")
 
 # ---------------------------------------------------------------------
 # Cleanup the html
 # ---------------------------------------------------------------------
 
 html = clean_html(html)
-    
+
 # ---------------------------------------------------------------------
 # Create html output for building and also for troubleshooting
 # ---------------------------------------------------------------------
@@ -100,7 +98,7 @@ open(output_html, 'w').write(html)
 
 # create output for checking/pasting to word
 styles = open(css, 'r').read()
-print(f"Writing styled output for Word copy/paste to buildfile_styled...")
+print(f"Writing styled output for Word copy/paste to {output_html}_styled...")
 html_with_styles = html.replace('</head>', f'<style>{styles}</style></head>')
 
 open(output_html.replace('.html', "_styled.html"), 'w').write(html_with_styles)
@@ -109,7 +107,8 @@ open(output_html.replace('.html', "_styled.html"), 'w').write(html_with_styles)
 # Build the (final) PDF
 # ---------------------------------------------------------------------
 
-# helper 
+
+# helper
 def open_pdf(output_fn, ask):
     # need to rewrite this with subproces?
     if ask == 'y':
@@ -121,23 +120,25 @@ def open_pdf(output_fn, ask):
     if ask_to_open == 'y':
         try:
             try_mac = subprocess.run(['open', output_fn],
-                                    capture_output=True, text=True)
+                                     capture_output=True, text=True)
             if try_mac.stderr == '':    
                 return try_mac.stdout                                    
         except FileNotFoundError:
             try: 
                 try_linux = subprocess.run(['xdg-open', output_fn],
                                     capture_output=True, text=True)
-                if try_linux.stderr == '':    
-                    return try_linux.stdout   
+                if try_linux.stderr == '':
+                    return try_linux.stdout
             except FileNotFoundError:
-                try: 
+                try:
                     try_pc = subprocess.run(['open', output_fn],
                                     capture_output=True, text=True)
-                    if try_pc.stderr == '':    
-                        return try_pc.stdout                   
+                    if try_pc.stderr == '':
+                        return try_pc.stdout
                 except:
-                    print("Sorry, we can't seem to open the file. Try opening with your file browser.")
+                    print("Sorry, we can't seem to open the file." +
+                          "Try opening with your file browser.")
+
 
 print("Building PDF...")
 
@@ -149,7 +150,8 @@ try:
         stylesheets=[CSS(string=styles)],
         font_config=font_config)
     # Let the user know where it lives now
-    print(f"\nSuccess! A PDF from {fn} has been successfully built and saved to:\n{output_fn}\n")
+    print(f"\nSuccess! A PDF from {fn} has been successfully built" +
+          f"and saved to:\n{output_fn}\n")
     open_pdf(output_fn, options.ask_to_open)
 except AttributeError as ae:
     print(ae)
@@ -159,7 +161,3 @@ except Exception as unk_e:
 # Cleanup build files if they're not wanted
 if not options.save_buildfile and os.path.isdir(buildfiles_dir):
     shutil.rmtree(buildfiles_dir)
-# elif options.output_dir:
-#     subprocess to move the directory
-#     mv -r buildfiles_dir
-# else: # move them to wherever the output file is
