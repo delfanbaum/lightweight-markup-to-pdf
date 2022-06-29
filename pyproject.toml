@@ -1,0 +1,33 @@
+[tool.poetry]
+name = "lwm2pdf"
+version = "0.1.0"
+description = "Takes a variety of lighweight markup files and returns PDFs styled with provided css (via WeasyPrint)"
+authors = ["Danny Elfanbaum <drelfanbaum@gmail.com>"]
+license = "MIT License"
+
+[tool.poetry.dependencies]
+python = "^3.9"
+weasyprint = "52.5"
+asciidoc = "^10.2.0"
+markdown2 = "^2.4.3"
+
+[tool.poetry.dev-dependencies]
+pytest = "^7.1.2"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.pytest.ini_options]
+addopts = [
+    "--strict-markers",
+    "--strict-config",
+    "-ra"
+    ]
+
+testpaths = "tests"
+pythonpath = "lwm2pdf"
+
+markers = [
+        "all: a placeholder for all tests",
+]
