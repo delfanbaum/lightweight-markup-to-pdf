@@ -24,8 +24,6 @@ Currently, `lwm2pdf` supports the following filetypes:
 
 ## Stylesheets and Themes
 
-(To do.) 
-
 A "manuscript" stylesheet is provided and selected as default. 
 
 ## Requirements
@@ -41,3 +39,12 @@ Some known issues include:
 - Markdown support is spotty
 - Code highlighting is not working as expected
 - Image URIs have to be absolute paths for Weasyprint to process them successfully. The script will take care of that...eventually.
+
+## Release Notes
+
+### v.0.1.2
+
+- First release to pypi
+- Includes many more tests (~82% coverage)
+- Removes handling of smart quotes due to bugs (noted for future development)
+- Move to a Poetry-based workflow

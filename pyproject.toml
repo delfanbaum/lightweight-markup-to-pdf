@@ -1,9 +1,10 @@
 [tool.poetry]
 name = "lwm2pdf"
-version = "0.1.0"
+version = "0.1.2"
 description = "Takes a variety of lighweight markup files and returns PDFs styled with provided css (via WeasyPrint)"
 authors = ["Danny Elfanbaum <drelfanbaum@gmail.com>"]
 license = "MIT"
+include = ["themes"]
 
 [tool.poetry.dependencies]
 python = "^3.9"

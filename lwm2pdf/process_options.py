@@ -1,4 +1,5 @@
 import os
+import pkg_resources
 from os.path import abspath
 
 
@@ -45,8 +46,6 @@ def get_stylesheet_from_options(options):
         css = abspath(options.stylesheet)
     else:  # defaults
         print("Using default stylesheet...")
-        script_dir = os.path.dirname(__file__)
-        script_home = str(os.path.abspath(script_dir))
-        styles_home = ('/').join(script_home.split('/')[0:-1])
-        css = styles_home + '/themes/manuscript.css'
+        css = pkg_resources.resource_filename('lwm2pdf',
+                                              'themes/manuscript.css')
     return css
