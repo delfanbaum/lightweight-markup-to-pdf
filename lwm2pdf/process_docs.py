@@ -14,9 +14,8 @@ def asciidoc_to_html(fn):
         if test_asciidoctor.stderr == '':
             print("Asciidoctor is present; converting with asciidoctor...")
             # make a temp preformatted file
-            fn_ = preprocess_asciidoctor_curly_quotes(fn)
             result = subprocess.run(['asciidoctor', '-a', "stylesheet!",
-                                     "-o", "-", fn_],
+                                     "-o", "-", fn],
                                     capture_output=True,
                                     text=True)
 
@@ -80,23 +79,3 @@ def markup_to_html(fn, supported_file_types):
                    "unsupported file format. This script accepts only " +
                    f"{supported_file_types} files.")
     return html
-
-
-def preprocess_asciidoctor_curly_quotes(fn):
-    """
-    takes an asciidoc file and returns a new file with the appropriate
-    formatting, i.e., "`this`" and '`this`'
-
-    NOTE: this isn't ready for prime time; removing from flow for now.
-    """
-    with open(fn, 'rt') as fin:
-        text = fin.read()
-        r = re.compile(r'"(.*?)"')
-        out = re.sub(r, r'"`\1`"', text)
-
-    out_fn = ".".join(fn.split('.')[0:-1]) + '_.' + fn.split('.')[-1]
-    with open(out_fn, 'w') as fout:
-        fout.write(out)
-
-    return out_fn
-
