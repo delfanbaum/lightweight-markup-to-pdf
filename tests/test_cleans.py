@@ -1,4 +1,4 @@
-from lwm2pdf.cleanhtml import clean_footnotes, convert_quotes
+from lwm2pdf.clean_html import clean_footnotes, convert_quotes
 
 
 class TestCleans:

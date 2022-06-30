@@ -60,3 +60,22 @@ def md_to_html(fn):
                                             "smarty-pants"  # to save a step
                                             ])
     return html
+
+
+def markup_to_html(fn, supported_file_types):
+    # handle asciidoc
+    if fn.find('.adoc') > -1 or fn.find('.asciidoc') > 1:
+        html = asciidoc_to_html(fn)
+    
+    # handle markdown
+    elif fn.find('.md') > -1:
+        html = md_to_html(fn)
+    
+    else:
+        html = None
+        SystemExit("Error: It appears you're trying to convert an " +
+                   "unsupported file format. This script accepts only " +
+                   f"{supported_file_types} files.")
+    return html
+
+
