@@ -12,6 +12,7 @@ python = "^3.9"
 weasyprint = "52.5"
 asciidoc = "^10.2.0"
 markdown2 = "^2.4.3"
+bs4 = "^0.0.1"
 
 [tool.poetry.dev-dependencies]
 pytest = "^7.1.2"
