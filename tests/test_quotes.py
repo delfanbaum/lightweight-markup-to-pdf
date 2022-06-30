@@ -57,3 +57,12 @@ def test_dont_smart_quote_code():
     result = postprocess_html_quotes(start)
     expected = '<p>Some <code>"String"</code></p>'
     assert result == expected
+
+
+def test_dont_smart_quote_pre():
+    """ ensure we're not screwing with code """
+    start = '<p>Some <pre>"String"</pre></p>'
+    result = postprocess_html_quotes(start)
+    expected = '<p>Some <pre>"String"</pre></p>'
+    assert result == expected
+
