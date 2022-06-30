@@ -56,6 +56,10 @@ Some known issues include:
 
 ## Release Notes
 
+### v.0.1.3
+
+- Add description for pypy page
+
 ### v.0.1.2
 
 - First release to pypi
