@@ -3,6 +3,16 @@
 `lwm2pdf` is a Python script for building lightweight markup content into styled PDFs via 
 [WeasyPrint](https://weasyprint.org/). 
 
+To install:
+
+```
+pip install lwm2pdf
+```
+
+## Requirements
+
+See _pyproject.toml_ for Python requirements. For optimal asciidoc conversion, I strongly recommend that you install some version of [Asciidoctor](https://asciidoctor.org/) for asciidoc conversion, but a port of the original `asciidoc` converter is used as a backup.  
+
 ## Supported Filetypes
 
 Currently, `lwm2pdf` supports the following filetypes:
@@ -26,9 +36,6 @@ Currently, `lwm2pdf` supports the following filetypes:
 
 A "manuscript" stylesheet is provided and selected as default. 
 
-## Requirements
-
-See _pyproject.toml_ for Python requirements. For optimal asciidoc conversion, I strongly recommend installing some version of [Asciidoctor](https://asciidoctor.org/), but a port of the original `asciidoc` converter is used as a backup.  
 
 ## Known Issues
 
