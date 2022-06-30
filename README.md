@@ -9,6 +9,13 @@ To install:
 pip install lwm2pdf
 ```
 
+Basic usage:
+
+```
+lwm2pdf -i myfile.adoc --open y
+```
+
+
 ## Requirements
 
 See _pyproject.toml_ for Python requirements. For optimal asciidoc conversion, I strongly recommend that you install some version of [Asciidoctor](https://asciidoctor.org/) for asciidoc conversion, but a port of the original `asciidoc` converter is used as a backup.  
