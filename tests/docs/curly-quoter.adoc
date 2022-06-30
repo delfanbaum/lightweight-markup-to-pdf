@@ -1,0 +1,9 @@
+= Curly Quotes Example Tester
+
+"Shut up!" quote she!
+
+Someone said, "This is an 'insult' she told me."
+
+[role="something"]
+Here is an 'instance' of something else.
+
