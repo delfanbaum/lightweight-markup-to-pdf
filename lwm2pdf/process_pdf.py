@@ -58,3 +58,5 @@ def create_pdf(fn, output_fn, buildfiles_dir, output_html, styles, options):
     # Cleanup build files if they're not wanted
     if not options.save_buildfile and os.path.isdir(buildfiles_dir):
         shutil.rmtree(buildfiles_dir)
+
+    return True
