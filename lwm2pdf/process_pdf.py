@@ -20,10 +20,10 @@ def open_pdf(output_fn, ask):
         try:
             try_mac = subprocess.run(['open', output_fn],
                                      capture_output=True, text=True)
-            if try_mac.stderr == '':    
-                return try_mac.stdout                                    
+            if try_mac.stderr == '':
+                return try_mac.stdout
         except FileNotFoundError:
-            try: 
+            try:
                 try_linux = subprocess.run(['xdg-open', output_fn],
                                            capture_output=True, text=True)
                 if try_linux.stderr == '':
