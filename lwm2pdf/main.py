@@ -40,5 +40,5 @@ def lwm2pdf(args=None):
         open_pdf(output_fn, options.ask_to_open)
 
 
-if __name__ == '__main__':  # type: ignore
+if __name__ == '__main__':  # pragma: no cover
     lwm2pdf()
