@@ -1,0 +1,12 @@
+= Simple Test
+
+This is a simple "test" document.
+
+It contains code:
+
+[source, bash]
+----
+echo "hello, world"
+----
+
+As well as _italic_ and *bold* type.

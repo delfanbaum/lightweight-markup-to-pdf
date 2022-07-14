@@ -10,17 +10,17 @@ def out_dir(tmp_path_factory):
 
 
 def test_lwm2pdf_happypath_adoc(out_dir,
-                           test_file="tests/docs/manuscript.adoc"):
+                                test_file="tests/docs/manuscript.adoc"):
     output_name = test_file.split('/')[-1].split('.')[0]
-    lwm2pdf(['-i', test_file, '-od', out_dir])  # type: ignore
+    lwm2pdf(['-i', test_file, '-od', out_dir, '--open', 'n'])  # type: ignore
 
     assert exists(f'{out_dir}/{output_name}.pdf')
 
 
 def test_lwm2pdf_happypath_md(out_dir,
-                           test_file="tests/docs/memo.md"):
+                              test_file="tests/docs/memo.md"):
     output_name = test_file.split('/')[-1].split('.')[0]
-    lwm2pdf(['-i', test_file, '-od', out_dir])  # type: ignore
+    lwm2pdf(['-i', test_file, '-od', out_dir, '--open', 'n'])  # type: ignore
 
     assert exists(f'{out_dir}/{output_name}.pdf')
 
@@ -31,7 +31,8 @@ def test_lwm2pdf_artifacts(out_dir,
     lwm2pdf(['-i', test_file,
              '-od', out_dir,
              '-b', f'{out_dir}/src',
-             '-p'
+             '-p',
+             '--open', 'n'
              ])  # type: ignore
 
     assert exists(f'{out_dir}/{output_name}.pdf')

@@ -19,9 +19,9 @@ def get_output_information(options, fn_name_only):
             output_fn = abspath(options.output)
     elif options.output_dir:
         if options.output_dir[-1] == '/':
-            output_fn = f'/{options.output_dir}{fn_name_only}.pdf'
+            output_fn = f'{options.output_dir}{fn_name_only}.pdf'
         else:
-            output_fn = f'/{options.output_dir}/{fn_name_only}.pdf'
+            output_fn = f'{options.output_dir}/{fn_name_only}.pdf'
     else:
         print("Using default output destination...")
         output_fn = os.getcwd() + f'/{fn_name_only}.pdf'
