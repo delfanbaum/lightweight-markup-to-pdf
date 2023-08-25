@@ -66,7 +66,7 @@ def md_to_html(fn):
     return html
 
 
-def markup_to_html(fn, supported_file_types):
+def markup_to_html(fn, supported_file_types) -> str:
     # handle asciidoc
     if fn.find('.adoc') > -1 or fn.find('.asciidoc') > 1:
         html = asciidoc_to_html(fn)
@@ -76,7 +76,7 @@ def markup_to_html(fn, supported_file_types):
         html = md_to_html(fn)
 
     else:
-        html = None
+        html = ''
         SystemExit("Error: It appears you're trying to convert an " +
                    "unsupported file format. This script accepts only " +
                    f"{supported_file_types} files.")
