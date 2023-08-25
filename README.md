@@ -37,6 +37,7 @@ Currently, `lwm2pdf` supports the following filetypes:
 | `-s`, `--stylesheet` | Select user stylesheet (css) (optional) |  False |
 | `-p`, `--preserve-buildfiles` | Preserve buildfiles in output/src in current working directory or buildfile directory | False |
 | `-b`',`--buildfile-dir` | Destination for buildfile(s) directory | False |
+| `-rsp`',`--run-smartypants` | Run `smartpants` on resultant HTML | False |
 | `--open` | "y" or "n" to automatically open or not open the pdf (doesn't ask) | `'ask'` |
 
 ## Stylesheets and Themes
@@ -55,6 +56,10 @@ Some known issues include:
 - Image URIs have to be absolute paths for Weasyprint to process them successfully. The script will take care of that...eventually.
 
 ## Release Notes
+
+### v.0.1.4
+
+- Add option to run `smartypants` for nicer quotes and things
 
 ### v.0.1.3
 
