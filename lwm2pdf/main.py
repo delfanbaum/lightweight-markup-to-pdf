@@ -1,3 +1,4 @@
+import smartypants
 from lwm2pdf.clean_html import clean_html
 from lwm2pdf.options import get_lwm2pdf_options
 from lwm2pdf.process_options import (
@@ -26,6 +27,9 @@ def lwm2pdf(args=None):
     # processing
     html = markup_to_html(fn, supported_file_types)
     html = clean_html(html)
+
+    if options.run_smartypants:
+        html = smartypants.smartypants(html)
 
     # create output for checking/pasting to word
     open(output_html, 'w').write(html)

@@ -60,6 +60,13 @@ def get_lwm2pdf_options(supported_file_types: str, argv=None):
                                     help='destination for buildfile(s)' +
                                          'directory')
 
+    cli_options_parser.add_argument('-rsp', '--run-smartypants',
+                                    dest="run_smartypants",
+                                    action='store_true',
+                                    required=False,
+                                    help='destination for buildfile(s)' +
+                                         'directory')
+
     cli_options_parser.add_argument('--open',
                                     action='store',
                                     type=str,
